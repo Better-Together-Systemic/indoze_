@@ -1,0 +1,3428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDOZE — 12 dias por dentro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --preto:#0D0D0B;
+  --quase-preto:#141412;
+  --ouro:#C8952A;
+  --ouro-claro:#F0D488;
+  --ouro-escuro:#7A5610;
+  --areia:#F5EDD8;
+  --areia2:#EDE0C4;
+  --cinza:#2A2A28;
+  --cinza2:#3D3D3A;
+  --muted:#888880;
+  --verde:#2E5C0E;
+  --branco:#FAFAF8;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--preto);
+  color:var(--branco);
+  font-size:19px;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ─── TELAS ─── */
+.tela{display:none;min-height:100vh;}
+.tela.ativa{display:flex;flex-direction:column;}
+
+/* ─── ENTRADA ─── */
+#entrada{
+  background:var(--preto);
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.entrada-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(200,149,42,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 70%, rgba(200,149,42,0.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+.entrada-linhas{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,149,42,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,149,42,0.04) 1px, transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;
+}
+.entrada-conteudo{
+  position:relative;z-index:2;
+  text-align:center;
+  padding:3rem 2rem;
+  max-width:640px;
+  width:100%;
+  animation:entrar 1.2s ease both;
+}
+@keyframes entrar{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.entrada-logo{
+  width:420px;height:auto;
+  margin-bottom:2.5rem;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+}
+.entrada-divisor{
+  width:1px;height:60px;
+  background:linear-gradient(to bottom,transparent,var(--ouro),transparent);
+  margin:0 auto 3rem;
+}
+.entrada-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,7vw,5rem);
+  font-weight:300;
+  letter-spacing:.12em;
+  color:var(--branco);
+  line-height:1;
+  margin-bottom:.5rem;
+}
+.entrada-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(.95rem,2vw,1.1rem);
+  font-weight:300;
+  letter-spacing:.35em;
+  color:var(--ouro);
+  text-transform:uppercase;
+  margin-bottom:3.5rem;
+}
+.entrada-frase{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.4rem,3.5vw,1.9rem);
+  font-style:italic;
+  font-weight:300;
+  color:rgba(250,250,248,.75);
+  line-height:1.5;
+  margin-bottom:3rem;
+  max-width:460px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.btn-entrar{
+  display:inline-block;
+  background:var(--ouro);
+  color:var(--preto);
+  border:none;
+  padding:18px 56px;
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  font-weight:500;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all .3s ease;
+  position:relative;
+  overflow:hidden;
+}
+.btn-entrar::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;
+}
+.btn-entrar:hover{background:var(--ouro-claro);transform:translateY(-2px);}
+.btn-entrar:hover::after{opacity:1;}
+.entrada-header{
+  position:absolute;
+  top:0;left:0;right:0;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding:1.25rem 2rem;
+}
+.link-origem{
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  cursor:pointer;
+  transition:color .2s;
+  background:none;border:none;
+  font-family:'DM Sans',sans-serif;
+  padding:0;
+}
+.link-origem:hover{color:var(--ouro);}
+
+/* ─── PLATAFORMA ─── */
+#plataforma{background:var(--quase-preto);}
+
+.plat-header{
+  background:var(--preto);
+  border-bottom:1px solid rgba(200,149,42,.15);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+  position:sticky;top:0;z-index:100;
+}
+.ph-logo{height:48px;width:auto;display:block;}
+.ph-nome{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:300;
+  letter-spacing:.2em;color:var(--ouro);
+}
+.ph-user{
+  display:flex;align-items:center;gap:10px;
+  font-size:15px;color:var(--muted);cursor:pointer;
+}
+.ph-user-nome{color:var(--branco);font-weight:500;}
+.ph-sair{
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;background:none;border:none;
+  font-family:'DM Sans',sans-serif;transition:color .2s;
+}
+.ph-sair:hover{color:var(--ouro);}
+
+.plat-nav{
+  background:var(--preto);
+  border-bottom:1px solid rgba(200,149,42,.1);
+  display:flex;overflow-x:auto;
+  padding:0 1.5rem;
+  scrollbar-width:none;
+}
+.plat-nav::-webkit-scrollbar{display:none;}
+.pn-btn{
+  padding:0 20px;height:48px;
+  background:none;border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all .2s;
+}
+.pn-btn:hover{color:var(--branco);}
+.pn-btn.ativo{color:var(--ouro);border-bottom-color:var(--ouro);}
+
+.plat-body{max-width:800px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+/* ─── SEÇÕES ─── */
+.secao{display:none;}.secao.ativa{display:block;}
+
+.sec-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:300;
+  letter-spacing:.08em;
+  color:var(--branco);
+  margin-bottom:.5rem;
+}
+.sec-sub{
+  font-size:17px;color:rgba(250,250,248,.75);
+  letter-spacing:.03em;
+  margin-bottom:2rem;
+  padding-bottom:1.5rem;
+  border-bottom:1px solid rgba(200,149,42,.15);
+}
+
+/* ─── GRADE 12 DIAS ─── */
+.grade-fases{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.fase-tag{
+  font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+.fase-dot{width:6px;height:6px;border-radius:50%;}
+
+.grade-dias{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:rgba(200,149,42,.1);
+  border:1px solid rgba(200,149,42,.1);
+  margin-bottom:2rem;
+}
+.dia-item{
+  background:var(--quase-preto);
+  padding:1.25rem 1rem;
+  cursor:pointer;
+  transition:background .2s;
+  position:relative;
+}
+.dia-item:hover{background:var(--cinza);}
+.dia-item.ativo{background:var(--cinza);}
+.dia-item.f1{border-left:2px solid #D85A30;}
+.dia-item.f2{border-left:2px solid #3B6D11;}
+.dia-item.f3{border-left:2px solid #185FA5;}
+.dia-item.f4{border-left:2px solid var(--ouro);}
+.dia-num{font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.dia-nome{font-size:15px;color:var(--branco);line-height:1.3;font-weight:400;}
+.dia-emoji{font-size:22px;margin-bottom:6px;display:block;}
+.dia-ok{
+  position:absolute;top:8px;right:8px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--verde);display:none;
+}
+.dia-item.salvo .dia-ok{display:block;}
+
+/* ─── DETALHE DIA ─── */
+.det-dia{
+  display:none;
+  background:var(--cinza);
+  border:1px solid rgba(200,149,42,.15);
+  padding:2rem;
+  margin-bottom:2rem;
+  animation:slideIn .3s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+.det-fase{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.det-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:300;
+  color:var(--branco);margin-bottom:1rem;
+}
+.det-desc{font-size:17px;color:rgba(250,250,248,.88);line-height:2.0;margin-bottom:1.5rem;}
+.det-indez{
+  background:rgba(200,149,42,.08);
+  border-left:2px solid var(--ouro);
+  padding:1rem 1.25rem;
+  margin-bottom:1.5rem;
+}
+.det-indez-label{font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:var(--ouro);margin-bottom:6px;}
+.det-indez-txt{font-size:16px;color:var(--areia);line-height:1.9;}
+.det-escrita{
+  width:100%;min-height:120px;
+  background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  color:var(--branco);
+  padding:14px 16px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  resize:vertical;margin-bottom:1rem;
+  transition:border-color .2s;
+}
+.det-escrita:focus{outline:none;border-color:var(--ouro);}
+.det-escrita::placeholder{color:var(--muted);}
+.det-acoes{display:flex;gap:10px;align-items:center;}
+.btn-salvar{
+  background:var(--ouro);color:var(--preto);
+  border:none;padding:11px 28px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  font-weight:500;letter-spacing:.08em;
+  cursor:pointer;transition:background .2s;
+}
+.btn-salvar:hover{background:var(--ouro-claro);}
+.btn-fechar-det{
+  background:none;border:1px solid rgba(200,149,42,.3);
+  color:var(--muted);padding:11px 20px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  cursor:pointer;transition:all .2s;
+}
+.btn-fechar-det:hover{border-color:var(--ouro);color:var(--branco);}
+.det-ok{font-size:14px;color:var(--ouro);margin-left:8px;opacity:0;transition:opacity .3s;}
+.det-ok.visivel{opacity:1;}
+
+/* ─── LIVRO ─── */
+.livro-bloco{
+  background:rgba(200,149,42,.06);
+  border:1px solid rgba(200,149,42,.2);
+  padding:2rem;text-align:center;margin-top:2rem;
+}
+.livro-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-weight:300;
+  color:var(--ouro-claro);margin-bottom:.5rem;
+}
+.livro-desc{font-size:16px;color:rgba(250,250,248,.8);margin-bottom:1.5rem;line-height:1.9;}
+.btn-gerar{
+  background:transparent;
+  border:1px solid var(--ouro);
+  color:var(--ouro);
+  padding:14px 36px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-gerar:hover{background:var(--ouro);color:var(--preto);}
+.carregando{
+  display:none;font-size:15px;color:var(--muted);
+  margin-top:1rem;letter-spacing:.05em;
+}
+.livro-erro{
+  display:none;font-size:15px;color:#c0392b;
+  margin-top:1rem;
+}
+.btn-retry{
+  background:none;border:none;color:var(--ouro);
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  cursor:pointer;text-decoration:underline;margin-top:6px;display:block;margin:6px auto 0;
+}
+
+/* ─── SALA ─── */
+.sala-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(200,149,42,.1);border:1px solid rgba(200,149,42,.1);}
+.sala-item{background:var(--quase-preto);padding:1.75rem 1.5rem;}
+.sala-item.destaque{background:var(--cinza);grid-column:span 2;}
+.sala-ico{font-size:1.5rem;margin-bottom:.75rem;display:block;}
+.sala-nome{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-weight:300;
+  color:var(--branco);margin-bottom:.5rem;
+}
+.sala-desc{font-size:16px;color:rgba(250,250,248,.8);line-height:1.9;}
+.sala-tag{
+  display:inline-block;margin-top:.75rem;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ouro);border:1px solid rgba(200,149,42,.3);
+  padding:3px 10px;
+}
+.enc-bloco{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,149,42,.1);margin-top:1rem;}
+.enc-item{background:var(--quase-preto);padding:1rem 1.25rem;}
+.enc-n{
+  display:inline-flex;width:24px;height:24px;
+  background:var(--ouro);color:var(--preto);
+  font-size:11px;font-weight:500;
+  align-items:center;justify-content:center;
+  margin-bottom:8px;
+}
+.enc-nome{font-size:16px;font-weight:500;color:var(--branco);margin-bottom:6px;}
+.enc-desc{font-size:16px;color:rgba(250,250,248,.8);line-height:1.9;}
+.enc-dia{font-size:13px;color:var(--ouro);margin-top:6px;letter-spacing:.05em;}
+
+/* ─── ESCRIVÃO ─── */
+.escriv-intro{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-style:italic;font-weight:300;
+  color:rgba(250,250,248,.6);
+  line-height:1.6;margin-bottom:2rem;
+  padding-bottom:1.5rem;
+  border-bottom:1px solid rgba(200,149,42,.15);
+}
+.escriv-campo{background:var(--cinza);padding:1.5rem;margin-bottom:1rem;}
+.escriv-label{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:300;
+  color:var(--ouro-claro);margin-bottom:1rem;display:block;
+}
+.escriv-input{
+  width:100%;min-height:100px;
+  background:var(--quase-preto);border:1px solid rgba(200,149,42,.2);
+  color:var(--branco);padding:14px 16px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  resize:vertical;margin-bottom:1rem;transition:border-color .2s;
+}
+.escriv-input:focus{outline:none;border-color:var(--ouro);}
+.escriv-input::placeholder{color:var(--muted);}
+.btn-inv{
+  background:var(--ouro);color:var(--preto);
+  border:none;padding:13px 32px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.1em;font-weight:500;
+  cursor:pointer;transition:background .2s;width:100%;
+}
+.btn-inv:hover{background:var(--ouro-claro);}
+.btn-inv:disabled{opacity:.5;cursor:not-allowed;}
+.escriv-resp{
+  display:none;
+  background:var(--cinza);
+  border-left:2px solid var(--ouro);
+  padding:1.5rem;margin-top:1rem;
+  font-size:17px;color:rgba(250,250,248,.92);line-height:2.0;
+}
+.escriv-resp.visivel{display:block;animation:slideIn .3s ease;}
+.escriv-erro{
+  display:none;background:rgba(192,57,43,.1);
+  border-left:2px solid #c0392b;
+  padding:1rem 1.25rem;margin-top:1rem;
+  font-size:15px;color:rgba(250,250,248,.85);
+}
+.escriv-erro.visivel{display:block;}
+.escriv-dia-ctx{
+  display:none;
+  background:var(--cinza2);
+  border-left:3px solid var(--ouro);
+  padding:.85rem 1.2rem;
+  margin-bottom:1.2rem;
+  border-radius:0 4px 4px 0;
+}
+.escriv-dia-ctx.visivel{display:block;}
+.escriv-dia-ctx-num{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--ouro);margin-bottom:4px;}
+.escriv-dia-ctx-titulo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--branco);}
+.escriv-dia-ctx-close{float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;margin-top:-2px;}
+.btn-ir-indez{
+  display:inline-block;margin-top:1.2rem;
+  background:none;border:1px solid var(--ouro);
+  color:var(--ouro);padding:10px 24px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.10em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
+}
+.btn-ir-indez:hover{background:var(--ouro);color:var(--preto);}
+/* ─── OPÇÕES INTERATIVAS (Passo 4) ─── */
+.escriv-opcoes{
+  display:none;
+  margin-top:1.5rem;
+  background:rgba(200,149,42,.06);
+  border:1px solid rgba(200,149,42,.18);
+  padding:1.25rem 1.5rem;
+  animation:slideIn .35s ease;
+}
+.escriv-opcoes.visivel{display:block;}
+.escriv-opcoes-titulo{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ouro);margin-bottom:1rem;
+}
+.escriv-opcoes-grid{display:flex;flex-direction:column;gap:8px;}
+.escriv-opcao-btn{
+  display:flex;align-items:flex-start;gap:12px;
+  width:100%;background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  padding:12px 16px;cursor:pointer;
+  text-align:left;transition:all .2s;
+  font-family:'DM Sans',sans-serif;
+}
+.escriv-opcao-btn:hover{
+  background:var(--cinza);
+  border-color:var(--ouro);
+}
+.escriv-opcao-btn.selecionada{
+  border-color:var(--ouro);
+  background:rgba(200,149,42,.12);
+}
+.escriv-opcao-num{
+  flex-shrink:0;width:24px;height:24px;
+  background:rgba(200,149,42,.15);
+  border:1px solid rgba(200,149,42,.3);
+  color:var(--ouro);font-size:11px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+.escriv-opcao-tipo{
+  font-size:11px;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--ouro);margin-bottom:4px;
+}
+.escriv-opcao-texto{
+  font-size:15px;color:rgba(250,250,248,.88);line-height:1.6;
+}
+.escriv-opcoes-nota{
+  font-size:13px;color:var(--muted);margin-top:1rem;
+  font-style:italic;line-height:1.6;
+}
+.escriv-hist{margin-top:3rem;border-top:1px solid rgba(200,149,42,.15);padding-top:2rem;}
+.escriv-hist-titulo{
+  font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:10px;
+}
+.escriv-hist-titulo::after{
+  content:'';flex:1;height:1px;background:rgba(200,149,42,.12);
+}
+.escriv-hist-grupo{margin-bottom:1.5rem;}
+.escriv-hist-grupo-header{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:8px;
+}
+.escriv-hist-grupo-dia{
+  font-size:14px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ouro);font-weight:500;
+}
+.escriv-hist-grupo-tema{
+  font-size:14px;color:rgba(250,250,248,.55);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+}
+.escriv-hist-item{
+  background:var(--cinza);
+  border-left:2px solid rgba(200,149,42,.2);
+  margin-bottom:2px;overflow:hidden;
+}
+.escriv-hist-item-cab{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 1.1rem;cursor:pointer;
+  transition:background .2s;
+  user-select:none;
+}
+.escriv-hist-item-cab:hover{background:rgba(200,149,42,.06);}
+.escriv-hist-item-data{font-size:13px;color:var(--muted);letter-spacing:.05em;}
+.escriv-hist-item-preview{
+  font-size:15px;color:rgba(250,250,248,.55);
+  font-style:italic;flex:1;margin:0 12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;
+}
+.escriv-hist-item-toggle{font-size:13px;color:var(--muted);}
+.escriv-hist-item-corpo{display:none;padding:0 1.1rem 1rem;}
+.escriv-hist-item-corpo.aberto{display:block;}
+.escriv-hist-item-q{
+  font-size:15px;color:rgba(250,250,248,.7);
+  font-style:italic;line-height:1.9;
+  padding:.75rem 0;
+  border-bottom:1px solid rgba(200,149,42,.1);
+  margin-bottom:.75rem;
+}
+.escriv-hist-item-r{
+  font-size:16px;color:rgba(250,250,248,.92);
+  line-height:2.0;
+}
+.escriv-hist-leitura{
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;color:var(--muted);
+  letter-spacing:.08em;margin-bottom:8px;
+}
+.escriv-hist-leitura::before{content:'🔒';font-size:9px;}
+
+/* ─── INDEZ ─── */
+.indez-intro{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;font-style:italic;font-weight:300;
+  color:rgba(250,250,248,.55);
+  line-height:1.7;margin-bottom:2rem;
+  padding-bottom:1.5rem;
+  border-bottom:1px solid rgba(200,149,42,.15);
+}
+.indez-form{background:var(--cinza);padding:1.5rem;margin-bottom:1.5rem;}
+.indez-label{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ouro);margin-bottom:.75rem;display:block;
+}
+.indez-input{
+  width:100%;background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  color:var(--branco);padding:13px 15px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  margin-bottom:1rem;transition:border-color .2s;
+}
+.indez-input:focus{outline:none;border-color:var(--ouro);}
+.indez-input::placeholder{color:var(--muted);}
+.indez-row{display:flex;gap:10px;align-items:flex-end;}
+.indez-dia-wrap{flex:0 0 140px;}
+.indez-dia-label{font-size:11px;color:var(--muted);margin-bottom:6px;display:block;letter-spacing:.05em;}
+.indez-dia{
+  width:100%;background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  color:var(--branco);padding:13px 15px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  transition:border-color .2s;
+}
+.indez-dia:focus{outline:none;border-color:var(--ouro);}
+.btn-plantar{
+  flex:1;background:var(--ouro);color:var(--preto);
+  border:none;padding:13px 24px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.08em;font-weight:500;cursor:pointer;transition:background .2s;
+}
+.btn-plantar:hover{background:var(--ouro-claro);}
+.indez-erro{font-size:14px;color:#e74c3c;margin-top:8px;display:none;}
+.indez-erro.visivel{display:block;}
+.indez-contador{
+  font-size:11px;color:var(--muted);margin-top:6px;display:none;
+  letter-spacing:.05em;
+}
+.indez-contador.visivel{display:block;}
+.indez-contador span{color:var(--ouro);font-weight:500;}
+
+.ovos-lista{display:flex;flex-direction:column;gap:12px;}
+.ovo-grupo{border-left:2px solid rgba(200,149,42,.25);}
+.ovo-grupo-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.5rem 1rem;
+  background:rgba(200,149,42,.06);
+}
+.ovo-grupo-titulo{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ouro);
+}
+.ovo-grupo-badge{
+  font-size:10px;color:var(--muted);
+  background:var(--cinza2);
+  padding:2px 8px;border-radius:10px;
+}
+.ovo-grupo-badge.cheio{color:var(--ouro);}
+.ovo-item{
+  background:var(--cinza);padding:.85rem 1.25rem;
+  display:flex;align-items:flex-start;gap:14px;
+  border-bottom:1px solid rgba(200,149,42,.07);
+}
+.ovo-item:last-child{border-bottom:none;}
+.ovo-num{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(200,149,42,.15);
+  font-size:10px;color:var(--ouro);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;font-weight:500;
+}
+.ovo-txt{font-size:14px;color:var(--branco);line-height:1.5;}
+.ovo-meta{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.03em;}
+
+/* ─── HISTÓRIAS ─── */
+.hist-item{
+  padding:1.75rem 0;
+  border-bottom:1px solid rgba(200,149,42,.1);
+  display:flex;gap:1.25rem;align-items:flex-start;
+}
+.hist-avatar{
+  width:40px;height:40px;flex-shrink:0;
+  background:rgba(200,149,42,.1);
+  border:1px solid rgba(200,149,42,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:500;color:var(--ouro);
+}
+.hist-nome{font-size:13px;font-weight:500;color:var(--branco);margin-bottom:2px;}
+.hist-cargo{font-size:11px;color:var(--muted);letter-spacing:.05em;margin-bottom:.75rem;}
+.hist-texto{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;font-weight:300;
+  color:rgba(250,250,248,.7);line-height:1.7;
+}
+.hist-selo{
+  display:inline-block;margin-top:.75rem;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--verde);
+}
+.hist-convite{
+  padding:2rem 0;text-align:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-style:italic;font-weight:300;
+  color:rgba(250,250,248,.35);
+}
+
+/* ─── FORÇA DA SENHA ─── */
+.senha-forca-wrap{margin-top:8px;}
+.senha-forca-barra{
+  display:flex;gap:4px;margin-bottom:8px;
+}
+.senha-forca-seg{
+  height:4px;flex:1;border-radius:2px;
+  background:rgba(200,149,42,.15);
+  transition:background .3s;
+}
+.senha-forca-seg.ativa-fraca   { background:#e74c3c; }
+.senha-forca-seg.ativa-media   { background:#f39c12; }
+.senha-forca-seg.ativa-forte   { background:#2ecc71; }
+.senha-forca-label{
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;min-height:14px;transition:color .3s;
+}
+.senha-forca-label.fraca  { color:#e74c3c; }
+.senha-forca-label.media  { color:#f39c12; }
+.senha-forca-label.forte  { color:#2ecc71; }
+
+/* checklist de requisitos */
+.senha-reqs{
+  display:flex;flex-direction:column;gap:5px;
+  padding:10px 12px;
+  background:rgba(200,149,42,.04);
+  border:1px solid rgba(200,149,42,.1);
+}
+.sr{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;
+  color:var(--muted);
+  transition:all .25s;
+  position:relative;
+}
+/* estado: pendente */
+.sr .sr-icon{
+  width:16px;height:16px;flex-shrink:0;
+  border:1px solid rgba(200,149,42,.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;
+  transition:all .25s;
+}
+.sr .sr-txt{
+  transition:all .25s;
+}
+/* estado: atingido */
+.sr.ok{color:rgba(250,250,248,.75);}
+.sr.ok .sr-icon{
+  background:#2ecc71;border-color:#2ecc71;color:#fff;
+}
+.sr.ok .sr-txt{
+  text-decoration:line-through;
+  text-decoration-color:#2ecc71;
+  text-decoration-thickness:1.5px;
+  color:rgba(250,250,248,.45);
+}
+
+/* ─── MODAL RECUPERAR SENHA ─── */
+.modal-rec-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:600;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1rem;
+}
+.modal-rec-bg.aberto{display:flex;}
+.modal-rec{
+  background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  max-width:400px;width:100%;
+  animation:entrar .3s ease;
+  position:relative;
+}
+.modal-rec-inner{padding:2.5rem 2rem 2rem;}
+
+/* ─── MODAL CONTA (dropdown) ─── */
+.user-dropdown{
+  position:relative;
+}
+.user-dropdown-menu{
+  display:none;
+  position:absolute;right:0;top:calc(100% + 8px);
+  background:var(--cinza);
+  border:1px solid rgba(200,149,42,.2);
+  min-width:220px;
+  z-index:200;
+  animation:entrar .2s ease;
+}
+.user-dropdown-menu.aberto{display:block;}
+.udm-header{
+  padding:1rem 1.25rem .75rem;
+  border-bottom:1px solid rgba(200,149,42,.1);
+}
+.udm-nome{font-weight:500;color:var(--branco);font-size:14px;}
+.udm-email{font-size:11px;color:var(--muted);margin-top:2px;}
+.udm-item{
+  display:block;width:100%;text-align:left;
+  background:none;border:none;
+  padding:.75rem 1.25rem;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  color:var(--branco);cursor:pointer;
+  transition:background .15s;
+}
+.udm-item:hover{background:rgba(200,149,42,.08);}
+.udm-item.danger{color:#e74c3c;}
+.udm-item.danger:hover{background:rgba(231,76,60,.08);}
+
+/* ─── MODAL TELA LOGIN (sobre entrada) ─── */
+.modal-login-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:500;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1rem;
+}
+.modal-login-bg.aberto{display:flex;}
+.modal-login{
+  background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  max-width:420px;width:100%;
+  animation:entrar .3s ease;
+  position:relative;
+}
+.modal-login-fechar{
+  position:absolute;top:1rem;right:1rem;
+  background:none;border:none;color:var(--muted);
+  font-size:18px;cursor:pointer;line-height:1;
+  transition:color .2s;
+}
+.modal-login-fechar:hover{color:var(--branco);}
+.modal-login-inner{padding:2.5rem 2rem 2rem;}
+
+/* ─── MODAL CONTA DADOS ─── */
+.modal-conta-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:500;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1rem;
+}
+.modal-conta-bg.aberto{display:flex;}
+.modal-conta{
+  background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  max-width:440px;width:100%;
+  animation:entrar .3s ease;
+  position:relative;
+}
+.modal-conta-cab{
+  padding:1.5rem 2rem 1rem;
+  border-bottom:1px solid rgba(200,149,42,.1);
+}
+.modal-conta-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:300;
+  color:var(--branco);
+}
+.modal-conta-corpo{padding:1.5rem 2rem 2rem;}
+.conta-info{
+  background:var(--cinza);padding:1rem 1.25rem;
+  margin-bottom:1rem;
+}
+.conta-info-label{font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.conta-info-valor{font-size:14px;color:var(--branco);}
+.conta-separador{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ouro);margin:1.5rem 0 1rem;
+  padding-top:1rem;border-top:1px solid rgba(200,149,42,.1);
+}
+.conta-senha-aviso{font-size:14px;color:var(--muted);margin-bottom:1rem;line-height:1.5;}
+.conta-ok{font-size:14px;color:var(--verde);margin-top:.5rem;display:none;}
+.conta-ok.visivel{display:block;}
+.conta-erro{font-size:14px;color:#e74c3c;margin-top:.5rem;display:none;}
+.conta-erro.visivel{display:block;}
+
+/* ─── CADASTRO / LOGIN ─── */
+.auth-wrap{
+  max-width:420px;margin:0 auto;
+  padding:3rem 1.5rem;
+}
+.auth-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:300;
+  letter-spacing:.08em;color:var(--branco);
+  margin-bottom:.5rem;
+}
+.auth-sub{font-size:15px;color:var(--muted);margin-bottom:2rem;}
+.campo{margin-bottom:1.25rem;}
+.campo-label{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:8px;
+}
+.campo-input{
+  width:100%;background:var(--cinza);
+  border:1px solid rgba(200,149,42,.15);
+  color:var(--branco);padding:14px 16px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  transition:border-color .2s;
+}
+.campo-input:focus{outline:none;border-color:var(--ouro);}
+.campo-input.erro{border-color:#e74c3c;}
+.campo-erro{font-size:14px;color:#e74c3c;margin-top:5px;display:none;}
+.campo-erro.visivel{display:block;}
+.btn-auth{
+  width:100%;background:var(--ouro);color:var(--preto);
+  border:none;padding:16px;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  letter-spacing:.1em;font-weight:500;
+  cursor:pointer;transition:background .2s;margin-top:.5rem;
+}
+.btn-auth:hover{background:var(--ouro-claro);}
+.auth-link{
+  font-size:14px;color:var(--muted);
+  text-align:center;margin-top:1.25rem;
+}
+.auth-link a{color:var(--ouro);cursor:pointer;}
+.logado-boas{
+  text-align:center;padding:3rem 1.5rem;
+  max-width:420px;margin:0 auto;
+}
+.logado-icone{
+  width:64px;height:64px;
+  background:rgba(200,149,42,.1);
+  border:1px solid rgba(200,149,42,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin:0 auto 1.5rem;
+}
+.logado-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.75rem;font-weight:300;
+  color:var(--branco);margin-bottom:.5rem;
+}
+.logado-sub{font-size:15px;color:var(--muted);margin-bottom:2rem;line-height:1.6;}
+.btn-logado{
+  display:block;width:100%;
+  background:var(--ouro);color:var(--preto);
+  border:none;padding:14px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.1em;font-weight:500;
+  cursor:pointer;transition:background .2s;margin-bottom:10px;
+}
+.btn-logado:hover{background:var(--ouro-claro);}
+.btn-logado.outline{
+  background:none;border:1px solid rgba(200,149,42,.3);
+  color:var(--muted);
+}
+.btn-logado.outline:hover{border-color:var(--ouro);color:var(--branco);background:none;}
+
+/* ─── MODAL ORIGEM ─── */
+.modal-bg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:999;
+  overflow-y:auto;
+  padding:2rem 1rem;
+  align-items:flex-start;
+  justify-content:center;
+}
+.modal-bg.aberto{display:flex;}
+.modal{
+  background:var(--quase-preto);
+  border:1px solid rgba(200,149,42,.2);
+  max-width:620px;width:100%;
+  margin:auto;
+  animation:entrar .4s ease;
+}
+.modal-cab{
+  padding:2rem 2rem 1.5rem;
+  border-bottom:1px solid rgba(200,149,42,.15);
+}
+.modal-cab-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.75rem;font-weight:300;
+  letter-spacing:.08em;color:var(--ouro-claro);
+  margin-bottom:.35rem;
+}
+.modal-cab-sub{font-size:14px;color:var(--muted);letter-spacing:.06em;line-height:1.5;}
+.modal-corpo{padding:1.75rem 2rem;}
+.origem-item{
+  padding:1.25rem 0;
+  border-bottom:1px solid rgba(200,149,42,.08);
+}
+.origem-item:last-child{border-bottom:none;}
+.origem-num{
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ouro);margin-bottom:.5rem;
+}
+.origem-titulo-item{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:300;
+  color:var(--branco);margin-bottom:.5rem;
+}
+.origem-texto-item{font-size:13px;color:rgba(250,250,248,.6);line-height:1.7;}
+.origem-quote{
+  margin-top:.75rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.95rem;font-style:italic;font-weight:300;
+  color:var(--ouro-claro);
+  padding-left:.75rem;
+  border-left:1px solid var(--ouro);
+}
+.serie-aviso{
+  background:rgba(200,149,42,.07);
+  border:1px solid rgba(200,149,42,.2);
+  padding:1.25rem;margin:1.5rem 0;text-align:center;
+}
+.serie-aviso-txt{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;font-weight:300;
+  color:var(--areia);line-height:1.6;
+}
+.insta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:none;border:1px solid rgba(200,149,42,.3);
+  color:var(--ouro);padding:10px 20px;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  letter-spacing:.1em;cursor:pointer;transition:all .2s;
+  margin-top:.75rem;
+}
+.insta-btn:hover{background:rgba(200,149,42,.1);}
+.insta-ico{width:16px;height:16px;fill:var(--ouro);}
+.modal-rodape{
+  padding:1rem 2rem;
+  border-top:1px solid rgba(200,149,42,.1);
+  text-align:right;
+}
+.btn-fechar-modal{
+  background:none;border:1px solid rgba(200,149,42,.2);
+  color:var(--muted);padding:10px 24px;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  letter-spacing:.1em;cursor:pointer;transition:all .2s;
+}
+.btn-fechar-modal:hover{border-color:var(--ouro);color:var(--branco);}
+
+/* ─── PONTO LOADING ─── */
+.dot{width:5px;height:5px;border-radius:50%;background:var(--ouro);animation:pulse 1.2s infinite;display:inline-block;margin:0 3px;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+
+/* ─── MODAL LIVRO ─── */
+.livro-modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.95);z-index:9999;
+  overflow-y:auto;padding:2rem 1rem;
+}
+.livro-modal{
+  max-width:680px;margin:auto;
+  background:#fff;color:#1a1a18;
+}
+.livro-capa{
+  background:#0D0D0B;padding:2.5rem 2rem;text-align:center;
+}
+.livro-capa-titulo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.75rem;font-weight:300;
+  color:#C8952A;margin-bottom:.35rem;line-height:1.3;
+}
+.livro-capa-sub{font-size:14px;color:#888;letter-spacing:.1em;}
+.livro-inner{padding:2rem;}
+.livro-frase{
+  background:#F5EDD8;padding:1.25rem;
+  text-align:center;margin-bottom:1.5rem;
+}
+.livro-frase-label{font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#7A5610;margin-bottom:6px;}
+.livro-frase-txt{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-style:italic;font-weight:300;
+  color:#7A5610;line-height:1.5;
+}
+.livro-dia{
+  border-bottom:1px solid #f0e8d8;padding:1.25rem 0;
+}
+.livro-dia-header{display:flex;align-items:center;gap:12px;margin-bottom:.75rem;}
+.livro-dia-num{font-size:11px;color:#aaa;letter-spacing:.1em;text-transform:uppercase;}
+.livro-dia-nome{font-size:15px;font-weight:500;color:#1a1a18;}
+.livro-dia-insight{
+  background:#F5EDD8;border-left:2px solid #C8952A;
+  padding:8px 12px;margin-bottom:.75rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.95rem;font-style:italic;color:#7A5610;
+}
+.livro-dia-escrita{font-size:13px;color:#555;line-height:1.6;}
+.livro-dia-transf{font-size:11px;color:#3B6D11;margin-top:.5rem;font-weight:500;}
+.livro-final{
+  background:#0D0D0B;color:#D4C4A8;
+  padding:1.75rem;text-align:center;margin-top:1.5rem;
+}
+.livro-final-pergunta{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-style:italic;font-weight:300;
+  color:#C8952A;margin-bottom:.75rem;
+}
+.livro-final-txt{font-size:13px;line-height:1.7;margin-bottom:.75rem;}
+.livro-final-assinatura{font-size:11px;color:#555;letter-spacing:.1em;margin-top:1rem;}
+.livro-btns{display:flex;gap:10px;justify-content:center;margin-top:1.5rem;padding:0 0 1rem;}
+.btn-print{
+  background:#C8952A;color:#0D0D0B;
+  border:none;padding:12px 28px;
+  font-family:'DM Sans',sans-serif;font-size:16px;
+  letter-spacing:.08em;cursor:pointer;
+}
+.btn-fechar-livro{
+  background:none;border:1px solid #ccc;color:#555;
+  padding:12px 28px;font-family:'DM Sans',sans-serif;
+  font-size:13px;cursor:pointer;
+}
+
+@media(max-width:600px){
+  .grade-dias{grid-template-columns:repeat(2,1fr);}
+  .sala-grid{grid-template-columns:1fr;}
+  .sala-item.destaque{grid-column:span 1;}
+  .enc-bloco{grid-template-columns:1fr;}
+  .ph-nome{display:none;}
+  .entrada-titulo{font-size:3rem;}
+  .entrada-logo{width:280px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     MODAL: ORIGEM
+════════════════════════════════════════ -->
+<div class="modal-bg" id="modal-origem">
+  <div class="modal">
+    <div class="modal-cab">
+      <div class="modal-cab-titulo">O início do INDOZE: O Efeito Indez</div>
+      <div class="modal-cab-sub">Da intuição ancestral à inovação digital — a história de uma ideia que já estava pronta muito antes de nascer.</div>
+    </div>
+    <div class="modal-corpo">
+
+      <div class="origem-item">
+        <div class="origem-num">I</div>
+        <div class="origem-titulo-item">A Ruptura e o Rascunho — A Semente</div>
+        <div class="origem-texto-item">Toda grande inovação exige que, em algum momento, você solte o que é seguro. Em 2021, tomei a decisão de exonerar meu cargo em um concurso público. Foi um salto no escuro. Lembro-me de olhar para o meu pai, imersa na incerteza de quem estava deixando uma vida estável para trás, e perguntar: — Pai, o que eu faço? Eu não sei fazer outra coisa a não ser trabalhar na escola. A resposta dele foi de uma simplicidade que, na época, beirava o absurdo. Ele me olhou e disse:</div>
+        <div class="origem-quote">"Vende ovos. Compra galinhas!"</div>
+        <div class="origem-texto-item" style="margin-top:.75rem;">Anotar aquilo em um rascunho parecia loucura, mas uma voz silenciosa me ancorava. A minha mãe, desnacida em 2016, sempre me dizia: "Calma, você vai conseguir!" Hoje, ela vive em mim. O rascunho foi guardado. A semente estava plantada.</div>
+      </div>
+
+      <div class="origem-item">
+        <div class="origem-num">II</div>
+        <div class="origem-titulo-item">A Sincronicidade — A Incubação</div>
+        <div class="origem-texto-item">Cinco anos se passaram. Eu vinha me transformando, testando metodologias, e já havia aplicado a minha série de 12 dias de investigação interior por duas vezes. O terreno estava sendo preparado. Até que, no dia 3 de março de 2026, a Mestra Olinda Guedes, em uma de suas aulas sistêmicas, começou a contar a história do "Indez" — o ovo deixado no ninho para sinalizar às galinhas o lugar seguro para a vida brotar. Aquilo me chamou uma atenção magnética. Como a própria Olinda ensina:</div>
+        <div class="origem-quote">"Tudo que você busca dá um jeito de te encontrar."</div>
+        <div class="origem-texto-item" style="margin-top:.75rem;">E a resposta estava prestes a bater na minha porta.</div>
+      </div>
+
+      <div class="origem-item">
+        <div class="origem-num">III</div>
+        <div class="origem-titulo-item">A Epifania — Conectando os Pontos</div>
+        <div class="origem-texto-item">Dias depois, meu pai chegou com um caderno velho de 5ª série, repleto de histórias antigas da nossa linhagem. Ele sentou-se na pontinha do sofá e a narrativa começou. Ele narrou como minha bisavó trançava ninhos de taquara com as próprias mãos. A madeira espetava, machucava, mas ela não parava. O meu pai, ainda menino, a acompanhava, levava pães doces e a ajudava a recolher mais de 100 ovos por dia nos ninhos que ela mesma construía.</div>
+        <div class="origem-quote">"Aí eu silenciei... silêncio total. E ele desenrolou a história."</div>
+        <div class="origem-texto-item" style="margin-top:.75rem;">Foi nesse exato segundo que o tempo dobrou sobre si mesmo. O rascunho de 2021, a aula da Olinda e a história da minha Bisa colidiram na minha mente. O "vender ovos" não era literal; era sobre criar ecossistemas seguros para que as pessoas pudessem botar para fora suas dores e chocar novos começos. Na visão sistêmica, como nos lembra Bert Hellinger: "Assentir. Concordar. Dizer Sim. A vida é o que é!" Ao dizer sim à minha história, o método nasceu. Tomei a decisão imediata:</div>
+        <div class="origem-quote">"Me aguarde, porque isso tá sendo meu material de construção."</div>
+      </div>
+
+      <div class="origem-item">
+        <div class="origem-num">IV</div>
+        <div class="origem-titulo-item">A Inovação e a Arquitetura — O Nascimento</div>
+        <div class="origem-texto-item">Quando liguei os fatos, uma energia incontrolável tomou conta de mim. Olhei para o meu noivo, Bruno, e gritei com toda a força dos meus pulmões: — "Bruno: Choqueiiiiii!" A percepção foi avassaladora e matemática: se o Efeito Indez e a série de 12 dias foram tão transformadores para mim, eles poderiam ser bons para milhares de pessoas no mundo todo. Peguei minha base de materiais e, às 3h30 da manhã, em um fluxo ininterrupto, comecei a escrever para não perder nenhuma ideia.</div>
+        <div class="origem-quote">"Botei tanto ovo que esqueci de carregar o computador."</div>
+        <div class="origem-texto-item" style="margin-top:.75rem;">Como um brilhante analista de sistemas, Bruno assumiu a linha de frente tecnológica. Como ele mesmo sempre diz diante dos desafios: "Tudo é o jeito." Sem ele, a grandiosidade desta plataforma não existiria. Ele traduziu a alma da minha ancestralidade em códigos de alto nível. Assim surgiu o INDOZE: <strong style="color:var(--areia);">IN</strong> — o movimento sistêmico de ir para dentro. <strong style="color:var(--areia);">DOZE</strong> — o ciclo exato de 12 dias de reprogramação mental e ação prática, um estudo completo baseado nos ensinamentos de Byron Katie.</div>
+      </div>
+
+      <div class="serie-aviso">
+        <div class="serie-aviso-txt">O que começou com as mãos de uma bisavó tecendo taquara, hoje é uma plataforma digital que acolhe histórias, desconstrói crenças e ensina o mundo a transformar dor em potência. A cada 12 dias concluídos, uma nova série se abre. Uma transformação que começa por dentro — e se multiplica.</div>
+      </div>
+
+      <div style="text-align:center;">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:.75rem;letter-spacing:.05em;">Siga e compartilhe</div>
+        <button class="insta-btn" onclick="window.open('https://www.instagram.com/elianesimoescruz','_blank')">
+          <svg class="insta-ico" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          @elianesimoescruz
+        </button>
+      </div>
+    </div>
+    <div class="modal-rodape">
+      <button class="btn-fechar-modal" onclick="document.getElementById('modal-origem').classList.remove('aberto')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TELA: ENTRADA
+════════════════════════════════════════ -->
+<div class="tela ativa" id="entrada">
+  <div class="entrada-bg"></div>
+  <div class="entrada-linhas"></div>
+  <div class="entrada-header">
+    <button class="link-origem" onclick="document.getElementById('modal-origem').classList.add('aberto')">
+      Como o INDOZE nasceu
+    </button>
+  </div>
+  <div class="entrada-conteudo">
+    <svg class="entrada-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96" aria-label="Better Together Systemic">
+  <defs>
+    <style>
+      .bt-text-main { font-family: 'Cormorant Garamond', Georgia, serif; fill: #F0D488; letter-spacing: 0.10em; }
+      .bt-text-sub  { font-family: 'DM Sans', Arial, sans-serif; fill: #C8952A; letter-spacing: 0.30em; }
+    </style>
+  </defs>
+  <!-- Folha esquerda -->
+  <path d="M 8,74 C 14,54 26,34 46,20 C 38,44 30,62 34,75 C 22,75 14,75 8,74 Z" fill="#C8952A" opacity="0.9"/>
+  <!-- Folha direita -->
+  <path d="M 84,74 C 78,54 66,34 46,20 C 54,44 62,62 58,75 C 70,75 78,75 84,74 Z" fill="#C8952A" opacity="0.42"/>
+  <!-- Nervura central -->
+  <line x1="46" y1="20" x2="46" y2="75" stroke="#F0D488" stroke-width="1.2" opacity="0.55"/>
+  <!-- Base -->
+  <line x1="10" y1="75" x2="82" y2="75" stroke="#C8952A" stroke-width="1" opacity="0.4"/>
+  <!-- Texto principal -->
+  <text x="104" y="56" class="bt-text-main" font-size="27" font-weight="300">Better Together</text>
+  <!-- Texto secundário -->
+  <text x="105" y="78" class="bt-text-sub" font-size="12" font-weight="400">SYSTEMIC</text>
+</svg>
+    <div class="entrada-divisor"></div>
+    <div class="entrada-titulo">INDOZE</div>
+    <div class="entrada-sub">12 dias por dentro</div>
+    <div class="entrada-frase">O que dentro de você<br>espera há muito tempo?</div>
+    <button class="btn-entrar" onclick="abrirModalLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TELA: PLATAFORMA
+════════════════════════════════════════ -->
+<div class="tela" id="plataforma">
+  <header class="plat-header">
+    <svg class="ph-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 52" aria-label="Better Together">
+  <defs>
+    <style>
+      .ph-text-main { font-family: 'Cormorant Garamond', Georgia, serif; fill: #F0D488; letter-spacing: 0.10em; }
+      .ph-text-sub  { font-family: 'DM Sans', Arial, sans-serif; fill: #C8952A; letter-spacing: 0.26em; }
+    </style>
+  </defs>
+  <!-- Folha esquerda -->
+  <path d="M 5,40 C 8,30 14,19 25,11 C 21,24 17,35 19,41 C 13,41 8,41 5,40 Z" fill="#C8952A" opacity="0.9"/>
+  <!-- Folha direita -->
+  <path d="M 45,40 C 42,30 36,19 25,11 C 29,24 33,35 31,41 C 37,41 42,41 45,40 Z" fill="#C8952A" opacity="0.42"/>
+  <!-- Nervura -->
+  <line x1="25" y1="11" x2="25" y2="41" stroke="#F0D488" stroke-width="0.9" opacity="0.55"/>
+  <!-- Base -->
+  <line x1="7" y1="41" x2="43" y2="41" stroke="#C8952A" stroke-width="0.7" opacity="0.4"/>
+  <!-- Texto principal -->
+  <text x="55" y="30" class="ph-text-main" font-size="15" font-weight="300">Better Together</text>
+  <!-- Texto secundário -->
+  <text x="56" y="44" class="ph-text-sub" font-size="7" font-weight="400">SYSTEMIC</text>
+</svg>
+    <div class="ph-nome">INDOZE</div>
+    <div class="ph-user user-dropdown">
+      <button class="ph-user-nome" id="ph-nome-usuario" onclick="toggleDropdown()" style="background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:var(--branco);">—</button>
+      <button class="ph-sair" onclick="sair()">Sair</button>
+      <div class="user-dropdown-menu" id="user-dropdown-menu">
+        <div class="udm-header">
+          <div class="udm-nome" id="udm-nome">—</div>
+          <div class="udm-email" id="udm-email">—</div>
+        </div>
+        <button class="udm-item" onclick="abrirModalConta();toggleDropdown()">Minha Conta</button>
+        <button class="udm-item danger" onclick="sair()">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="plat-nav">
+    <button class="pn-btn ativo" onclick="ativarSecao('sala',this)">A Sala</button>
+    <button class="pn-btn" onclick="ativarSecao('dias',this)">Os 12 Dias</button>
+    <button class="pn-btn" onclick="ativarSecao('escrivao',this)">Escrivão</button>
+    <button class="pn-btn" onclick="ativarSecao('indez',this)">Meu Indez</button>
+    <button class="pn-btn" onclick="ativarSecao('historias',this)">Histórias</button>
+  </nav>
+
+  <main class="plat-body">
+
+    <!-- ── 12 DIAS ── -->
+    <div class="secao" id="sec-dias">
+      <h1 class="sec-titulo">Os 12 Dias por Dentro</h1>
+      <p class="sec-sub">Selecione um dia para acessar o conteúdo e registrar sua reflexão.</p>
+
+      <div class="grade-fases">
+        <span class="fase-tag"><span class="fase-dot" style="background:#D85A30"></span>A Mente</span>
+        <span class="fase-tag" style="margin-left:12px;"><span class="fase-dot" style="background:#3B6D11"></span>Honrando as Raízes</span>
+        <span class="fase-tag" style="margin-left:12px;"><span class="fase-dot" style="background:#185FA5"></span>Florescer</span>
+        <span class="fase-tag" style="margin-left:12px;"><span class="fase-dot" style="background:var(--ouro)"></span>Algoritmo do Sim</span>
+      </div>
+
+      <div class="grade-dias" id="grade-dias"></div>
+      <div class="det-dia" id="det-dia"></div>
+
+        <div class="livro-bloco" id="livro-bloco" style="display:none;">
+        <div class="livro-titulo">📖 O E-Feito INDOZE</div>
+        <div class="livro-desc" style="font-style:italic;color:var(--ouro);margin-bottom:.5rem;">Uhuuuu! Parei de brigar com os fatos e executei coisas diferentes em 12 dias.</div>
+        <div class="livro-desc">Tudo o que foi escrito durante os seus 12 dias será o registro autoral e vivo da sua história. As suas respostas ganharão forma agora e terão um grande efeito. Criado através de você!</div>
+        <button class="btn-gerar" id="btn-gerar" onclick="gerarLivro()">
+          <span>Gerar meu livro</span>
+          <span style="font-size:.8rem;opacity:.6;">→</span>
+        </button>
+        <div class="carregando" id="carregando">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span style="margin-left:8px;">Preparando seu livro...</span>
+        </div>
+        <div class="livro-erro" id="livro-erro">
+          Não foi possível conectar agora.
+          <button class="btn-retry" onclick="gerarLivro()">Tentar novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── A SALA ── -->
+    <div class="secao ativa" id="sec-sala">
+      <h1 class="sec-titulo">A Sala</h1>
+      <p class="sec-sub">Que legal você por aqui! Os seus pensamentos podem ser trançados, revistos e questionados. Solte suas ideias e escreva com transparência para você mesmo (a). Seu resultado pode ser surpreendente. 
+        A materialização da sua história começa agora!</p>
+      <div class="sala-grid">
+
+        <div class="sala-item">
+          <span class="sala-ico">🪺</span>
+          <div class="sala-nome">O Seu Ninho <span style="font-size:14px;color:var(--muted);font-weight:400;">(Materiais de Apoio)</span></div>
+          <div class="sala-desc">Aqui ficam os conteúdos que podem mudar a sua realidade! É inspirador!</div>
+          <div class="sala-desc">Aproveite!</div>
+          <span class="sala-tag">Seu refúgio</span>
+        </div>
+
+        <div class="sala-item">
+          <span class="sala-ico">🪞</span>
+          <div class="sala-nome">O Espelho da Mente <span style="font-size:14px;color:var(--muted);font-weight:400;">(Sua Investigação Guiada)</span></div>
+          <div class="sala-desc">Para mudarmos o que projetamos no mundo, precisamos limpar a nossa própria lente. Através do seu diálogo aqui, você vai descobrir o que ainda não enxerga na sua história e, principalmente, o que já está pronto (a) para fazer diferente.</div>
+          <span class="sala-tag">Em breve</span>
+        </div>
+
+        <div class="sala-item">
+          <span class="sala-ico">🎙️</span>
+          <div class="sala-nome">A Voz da Sua História <span style="font-size:14px;color:var(--muted);font-weight:400;">(Compartilhe o Movimento)</span></div>
+          <div class="sala-desc">Quando compartilhamos algo que é bom para gente, criamos a possibilidade de incluir mais pessoas.
+
+            Durante 12 dias, permita que a sua jornada seja vista. Use suas redes sociais como um diário vivo desse caminho. Compartilhe seus aprendizados, marque a @elianesimoescruz e lembre-se: juntos, é melhor.
+            
+            E talvez, ao dar voz à sua história, você descubra que tudo pode mudar, inclusive você!
+            
+            Fazer isso é um treino poderoso para que você ative a sabedoria do Toque de Tistu e crie possibilidade de inspirar e transformar o dia de outras pessoas que te acompanham!</div>
+          <span class="sala-tag">Seu conteúdo</span>
+        </div>
+
+        <!-- LIVRO DA SUA VIDA — destaque especial -->
+        <div class="sala-item" style="position:relative;overflow:hidden;">
+          <span class="sala-ico" style="font-size:2.4rem;">📖</span>
+          <div class="sala-nome" style="color:var(--ouro-claro);font-size:1.15rem;font-weight:400;">O E-Feito INDOZE</div>
+          <div class="sala-desc" style="color:rgba(250,250,248,.65);font-style:italic;margin-bottom:.6rem;">Parei de brigar com os fatos e executei coisas diferentes em 12 dias.</div>
+          <div class="sala-desc" style="color:rgba(250,250,248,.85);">Tudo o que você escrever durante os 12 dias será utilizado para registar sua história! No último dia, suas respostas terão um grande efeito! Sim! <strong style="color:var(--ouro-claro);">Foi você que criou!</strong></div>
+          <span class="sala-tag" style="background:rgba(200,149,42,.25);color:var(--ouro-claro);border:1px solid rgba(200,149,42,.5);font-weight:600;">✦ Gerado no Dia 12</span>
+        </div>
+
+        <div class="sala-item destaque">
+          <span class="sala-ico">👩‍💻</span>
+          <div class="sala-nome">Encontros ao Vivo</div>
+          <div class="sala-desc" style="margin-bottom:1rem;">Três momentos na nossa "Sala entre Histórias" para compartilhar, integrar e comemorar.</div>
+          <div class="enc-bloco">
+            <div class="enc-item">
+              <div class="enc-n">1</div>
+              <div class="enc-nome">Limpando a Lente <span style="opacity:.6;font-size:11px;font-weight:400;">— A Mente</span></div>
+              <div class="enc-desc">Como foram os primeiros passos? Vamos olhar juntos(as) para o que pesou, o que surpreendeu e o alívio que surgiu quando começamos a questionar os pensamentos que nos faziam sofrer. Um encontro para clarear a visão.</div>
+              <div class="enc-dia">Após o Dia 4</div>
+            </div>
+            <div class="enc-item">
+              <div class="enc-n">2</div>
+              <div class="enc-nome">A Força da Raiz <span style="opacity:.6;font-size:11px;font-weight:400;">— O Sistema e o Corpo</span></div>
+              <div class="enc-desc">É o momento de olharmos para a nossa ancestralidade e para a sabedoria do nosso corpo. Qual foi a maior "névoa mental" que você dissipou até aqui? Um encontro para alinhar a sua biologia com a sua consciência e reconhecer de onde vem a sua força.</div>
+              <div class="enc-dia">Após o Dia 8</div>
+            </div>
+            <div class="enc-item" style="border-color:rgba(200,149,42,.35);">
+              <div class="enc-n" style="background:var(--ouro);color:#1a1008;">3</div>
+              <div class="enc-nome" style="color:var(--ouro);">O INDOZE que Nasceu ✦ <span style="opacity:.7;font-size:11px;font-weight:400;">— A Comemoração Final</span></div>
+              <div class="enc-desc">O universo lê e amplifica os nossos inícios! O que nasceu de novo em você nestes 12 dias? A nossa comemoração coletiva é o encontro para enxergar o que construimos nesta jornada: <strong style="color:var(--areia);">a partir de hoje, você recebe seu INDOZE </strong>, criado por você mesmo(a)!</div>
+              <div class="enc-dia" style="color:var(--ouro);">Dia 12 ✦ Comemoração</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── ESCRIVÃO ── -->
+    <div class="secao" id="sec-escrivao">
+      <h1 class="sec-titulo">A Mesa do Escrivão</h1>
+      <p class="escriv-intro">Quando paramos de brigar com a realidade, o nosso pensamento melhora. A partir de agora, o Escrivão será seu secretário e vai te ajudar investigar seus pensamentos, sem julgar e no seu tempo.</p>
+      <div class="escriv-dia-ctx" id="escriv-dia-ctx">
+        <button class="escriv-dia-ctx-close" onclick="limparContextoDia()">✕</button>
+        <div class="escriv-dia-ctx-num" id="escriv-dia-ctx-num"></div>
+        <div class="escriv-dia-ctx-titulo" id="escriv-dia-ctx-titulo"></div>
+      </div>
+      <div class="escriv-campo">
+        <label class="escriv-label" id="escriv-label">Em que você está pensando? Como posso te ajudar hoje?</label>
+        <textarea class="escriv-input" id="escriv-input" placeholder="Escreva com transparência. Quando terminar, pressione Enter para continuar..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();investigar();}"></textarea>
+        <button class="btn-inv" id="btn-inv" onclick="investigar()">🔍 O que ainda não vejo?</button>
+      </div>
+      <div class="escriv-resp" id="escriv-resp"></div>
+
+      <!-- OPÇÕES INTERATIVAS — Passo 4 -->
+      <div class="escriv-opcoes" id="escriv-opcoes">
+        <div class="escriv-opcoes-titulo">🌱 Qual é a sua semente para hoje?</div>
+        <div class="escriv-opcoes-grid" id="escriv-opcoes-grid"></div>
+        <div class="escriv-opcoes-nota">Clique na opção que traz mais leveza. O texto vai para o seu Indez — você pode editá-lo antes de plantar.</div>
+      </div>
+
+      <div class="escriv-erro" id="escriv-erro">
+        Conexão instável. <button class="btn-retry" onclick="investigar()">Tentar novamente</button>
+      </div>
+      <div id="escriv-pos-resp" style="display:none;">
+        <button class="btn-ir-indez" onclick="irParaIndez()">→ Ir para Meu Indez</button>
+      </div>
+      <div class="escriv-hist" id="escriv-hist" style="display:none;">
+        <div class="escriv-hist-titulo">Investigações anteriores</div>
+        <div id="escriv-hist-lista"></div>
+      </div>
+    </div>
+
+    <!-- ── INDEZ ── -->
+    <div class="secao" id="sec-indez">
+      <h1 class="sec-titulo">Meu Indez</h1>
+      <p class="indez-intro">"Todo novo começo precisa de um lugar seguro para brotar. O seu Indez é a sua primeira semente — a pequena ação que você acomoda neste ninho. O algoritmo do universo lê os nossos começos e amplifica o que você planta.
+        Qual semente você escolhe acomodar no seu ninho hoje?"</p>
+      <div class="indez-form">
+        <label class="indez-label">Qual semente você escolhe acomodar no seu ninho hoje? Registre a opção sugerida pelo Espelho da Mente para as suas próximas 24 horas... </label>
+        <input type="text" class="indez-input" id="indez-input" placeholder="Escreva a ação que você planta nas próximas 24 horas..." onkeydown="if(event.key==='Enter'){event.preventDefault();botarOvo();}">
+        <div class="indez-row">
+          <div class="indez-dia-wrap">
+            <label class="indez-dia-label">Dia (1 a 12)</label>
+            <input type="number" class="indez-dia" id="indez-dia" min="1" max="12" step="1"
+              placeholder="1–12"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value>12)this.value=12;if(this.value<1&&this.value!='')this.value=1;atualizarContador()">
+          </div>
+          <button class="btn-plantar" onclick="botarOvo()">Plantar semente</button>
+        </div>
+        <div class="indez-erro" id="indez-erro"></div>
+        <div class="indez-contador" id="indez-contador">Dia <span id="indez-contador-dia">—</span>: <span id="indez-contador-qtd">0</span>/3 Indez plantados</div>
+      </div>
+      <div class="ovos-lista" id="ovos-lista"></div>
+    </div>
+
+    <!-- ── HISTÓRIAS ── -->
+    <div class="secao" id="sec-historias">
+      <h1 class="sec-titulo">Histórias que chegaram</h1>
+      <p class="sec-sub">Pessoas que encontraram um lugar para entrar — e começaram.</p>
+
+      <div class="hist-item">
+        <div class="hist-avatar">J.L</div>
+        <div>
+          <div class="hist-nome">J. L.</div>
+          <div class="hist-cargo">Colega da formação · Série 1</div>
+          <div class="hist-texto">Celebrou 6 anos da sua sala de atendimento com a história do Indez. As mulheres chegaram com ninho e ovos de verdade — um presente que ela não esperava. Cada pessoa recebeu o seu Indez naquela noite. A sala floresceu.</div>
+          <span class="hist-selo">✓ Concluiu</span>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-avatar">🌱</div>
+        <div>
+          <div class="hist-nome">Eliane · A Fundadora</div>
+          <div class="hist-cargo">Better Together Systemic · Séries 1 e 2</div>
+          <div class="hist-texto">Ao descobrir este conhecimento através de Olinda Guedes, o efeito foi imediato. Depois de 2 séries, nasce a multiplicação. Em um dia intenso, quando o pai adoeceu, percebeu que algo havia mudado. Ela lidou diferente. As ações se transformaram. As sensações foram aceitas através do Sim do universo — com compreensão, aceitação da realidade como ela é. O Indez da aceitação e do "eu acredito na vida".</div>
+          <span class="hist-selo">✓ Fundou o método</span>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-avatar">M.A</div>
+        <div>
+          <div class="hist-nome">M. A.</div>
+          <div class="hist-cargo">A mulher que disse sim sem saber por quê · Série 3</div>
+          <div class="hist-texto">"Agora eu sei por que eu queria fazer isso sem saber por que — era minha alma que queria estar aqui."</div>
+          <span class="hist-selo">✓ Concluiu</span>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-avatar">F.L</div>
+        <div>
+          <div class="hist-nome">F. L. M. M.</div>
+          <div class="hist-cargo">Série 3</div>
+          <div class="hist-texto">"Fiquei emocionada, achei muito interessante e descobri muitas coisas que não sabia! Saí contando para minha nora e meu filho — eles amaram e também querem fazer!"</div>
+          <span class="hist-selo">✓ Concluiu</span>
+        </div>
+      </div>
+
+      <div class="hist-item">
+        <div class="hist-avatar">B.M</div>
+        <div>
+          <div class="hist-nome">B. M. M.</div>
+          <div class="hist-cargo">Série 3</div>
+          <div class="hist-texto">"Esta série de 12 dias faz a gente pensar em coisas que parecem não ter fim — e ao mesmo tempo em coisas mais palpáveis. Gostei muito."</div>
+          <span class="hist-selo">✓ Concluiu</span>
+        </div>
+      </div>
+
+      <div class="hist-convite">Sua história pode ser a próxima.</div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-login-bg" id="modal-login-bg">
+  <div class="modal-login">
+    <button class="modal-login-fechar" onclick="fecharModalLogin()">✕</button>
+
+    <!-- tela login -->
+    <div id="ml-login" class="modal-login-inner">
+      <h2 class="auth-titulo" style="margin-bottom:.35rem;">Que legal você aqui!</h2>
+      <p class="auth-sub">Entre com seu e-mail e senha.</p>
+      <div class="campo">
+        <label class="campo-label">E-mail</label>
+        <input type="email" class="campo-input" id="log-email">
+        <div class="campo-erro" id="e-log-email">E-mail inválido.</div>
+      </div>
+      <div class="campo">
+        <label class="campo-label">Senha</label>
+        <input type="password" class="campo-input" id="log-senha">
+        <div class="campo-erro" id="e-log">E-mail ou senha incorretos.</div>
+      </div>
+      <button class="btn-auth" onclick="fazerLogin()">Entrar</button>
+      <div class="auth-link" style="margin-top:1rem;">
+        <a onclick="abrirRecuperarSenha()" style="color:var(--ouro);cursor:pointer;">Esqueceu sua senha?</a>
+      </div>
+      <div class="auth-link" style="margin-top:.5rem;">
+        Não tem cadastro? <a onclick="mostrarCadastroModal()" style="color:var(--ouro);cursor:pointer;">Crie sua conta</a>
+      </div>
+    </div>
+
+    <!-- tela cadastro -->
+    <div id="ml-cadastro" class="modal-login-inner" style="display:none;">
+      <h2 class="auth-titulo" style="margin-bottom:.35rem;">Criar conta</h2>
+      <p class="auth-sub">Preencha para registrar seu acesso ao INDOZE.</p>
+      <div class="campo"><label class="campo-label">Nome completo</label><input type="text" class="campo-input" id="cad-nome"><div class="campo-erro" id="e-nome">Informe seu nome.</div></div>
+      <div class="campo"><label class="campo-label">E-mail</label><input type="email" class="campo-input" id="cad-email"><div class="campo-erro" id="e-email">E-mail inválido.</div></div>
+      <div class="campo"><label class="campo-label">Telefone (somente números)</label><input type="tel" class="campo-input" id="cad-tel" maxlength="15"><div class="campo-erro" id="e-tel">Apenas números.</div></div>
+      <div class="campo"><label class="campo-label">Instagram</label><input type="text" class="campo-input" id="cad-insta" placeholder="@seuperfil"><div class="campo-erro" id="e-insta">Deve começar com @.</div></div>
+      <div class="campo">
+        <label class="campo-label">Senha</label>
+        <input type="password" class="campo-input" id="cad-senha" oninput="avaliarSenha(this.value)" autocomplete="new-password" placeholder="Crie uma senha segura">
+        <div class="senha-forca-wrap" id="senha-forca-wrap" style="display:none;">
+          <div class="senha-forca-barra">
+            <div class="senha-forca-seg" id="sf1"></div>
+            <div class="senha-forca-seg" id="sf2"></div>
+            <div class="senha-forca-seg" id="sf3"></div>
+            <div class="senha-forca-seg" id="sf4"></div>
+            <div class="senha-forca-seg" id="sf5"></div>
+          </div>
+          <div class="senha-forca-label" id="sf-texto"></div>
+          <div class="senha-reqs">
+            <div class="sr" id="sr-len">
+              <span class="sr-icon"></span>
+              <span class="sr-txt">Mínimo 8 caracteres</span>
+            </div>
+            <div class="sr" id="sr-mai">
+              <span class="sr-icon"></span>
+              <span class="sr-txt">Pelo menos 1 letra maiúscula (A–Z)</span>
+            </div>
+            <div class="sr" id="sr-min">
+              <span class="sr-icon"></span>
+              <span class="sr-txt">Pelo menos 1 letra minúscula (a–z)</span>
+            </div>
+            <div class="sr" id="sr-num">
+              <span class="sr-icon"></span>
+              <span class="sr-txt">Pelo menos 1 número (0–9)</span>
+            </div>
+            <div class="sr" id="sr-esp">
+              <span class="sr-icon"></span>
+              <span class="sr-txt">Pelo menos 1 caractere especial (!@#$%...)</span>
+            </div>
+          </div>
+        </div>
+        <div class="campo-erro" id="e-senha"></div>
+      </div>
+      <div class="campo"><label class="campo-label">Confirmar senha</label><input type="password" class="campo-input" id="cad-senha2" autocomplete="new-password"><div class="campo-erro" id="e-senha2">Senhas não conferem.</div></div>
+      <button class="btn-auth" id="btn-criar-conta" onclick="cadastrar()">Criar conta</button>
+      <div class="auth-link" style="margin-top:1.25rem;">
+        Já tem conta? <a onclick="mostrarLoginModal()" style="color:var(--ouro);cursor:pointer;">Entrar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECUPERAR SENHA -->
+<div class="modal-rec-bg" id="modal-rec-bg">
+  <div class="modal-rec">
+    <button class="modal-login-fechar" onclick="fecharRecuperarSenha()">✕</button>
+
+    <!-- passo 1: informar e-mail -->
+    <div id="rec-passo1" class="modal-rec-inner">
+      <h2 class="auth-titulo" style="margin-bottom:.35rem;">Recuperar senha</h2>
+      <p class="auth-sub" style="line-height:1.6;">Informe o e-mail cadastrado. Você receberá um link para criar uma nova senha.</p>
+      <div class="campo">
+        <label class="campo-label">E-mail</label>
+        <input type="email" class="campo-input" id="rec-email">
+        <div class="campo-erro" id="e-rec-email">E-mail inválido.</div>
+      </div>
+      <button class="btn-auth" onclick="enviarRecuperacao()">Enviar link</button>
+      <div class="conta-ok" id="rec-ok" style="display:none;margin-top:1rem;font-size:13px;color:#2ecc71;">
+        ✓ Link enviado! Verifique sua caixa de entrada.
+      </div>
+      <div class="conta-erro" id="rec-erro" style="display:none;margin-top:.75rem;font-size:14px;color:#e74c3c;"></div>
+      <div class="auth-link" style="margin-top:1.25rem;">
+        <a onclick="fecharRecuperarSenha();abrirModalLogin()" style="color:var(--ouro);cursor:pointer;">← Voltar para o login</a>
+      </div>
+    </div>
+
+    <!-- passo 2: nova senha (após clicar no link do e-mail) -->
+    <div id="rec-passo2" class="modal-rec-inner" style="display:none;">
+      <h2 class="auth-titulo" style="margin-bottom:.35rem;">Nova senha</h2>
+      <p class="auth-sub">Escolha uma nova senha para sua conta.</p>
+      <div class="campo">
+        <label class="campo-label">Nova senha</label>
+        <input type="password" class="campo-input" id="rec-nova-senha" oninput="avaliarSenhaRec(this.value)" autocomplete="new-password" placeholder="Crie uma senha segura">
+        <div class="senha-forca-wrap" id="rec-forca-wrap" style="display:none;">
+          <div class="senha-forca-barra">
+            <div class="senha-forca-seg" id="rfs1"></div>
+            <div class="senha-forca-seg" id="rfs2"></div>
+            <div class="senha-forca-seg" id="rfs3"></div>
+            <div class="senha-forca-seg" id="rfs4"></div>
+            <div class="senha-forca-seg" id="rfs5"></div>
+          </div>
+          <div class="senha-forca-label" id="rfs-texto"></div>
+          <div class="senha-reqs">
+            <div class="sr" id="rsr-len"><span class="sr-icon"></span><span class="sr-txt">Mínimo 8 caracteres</span></div>
+            <div class="sr" id="rsr-mai"><span class="sr-icon"></span><span class="sr-txt">Pelo menos 1 letra maiúscula (A–Z)</span></div>
+            <div class="sr" id="rsr-min"><span class="sr-icon"></span><span class="sr-txt">Pelo menos 1 letra minúscula (a–z)</span></div>
+            <div class="sr" id="rsr-num"><span class="sr-icon"></span><span class="sr-txt">Pelo menos 1 número (0–9)</span></div>
+            <div class="sr" id="rsr-esp"><span class="sr-icon"></span><span class="sr-txt">Pelo menos 1 caractere especial (!@#$%...)</span></div>
+          </div>
+        </div>
+        <div class="campo-erro" id="e-rec-nova"></div>
+      </div>
+      <div class="campo">
+        <label class="campo-label">Confirmar nova senha</label>
+        <input type="password" class="campo-input" id="rec-nova-senha2" autocomplete="new-password">
+        <div class="campo-erro" id="e-rec-nova2">Senhas não conferem.</div>
+      </div>
+      <button class="btn-auth" onclick="salvarNovaSenha()">Salvar nova senha</button>
+      <div class="conta-ok" id="rec-nova-ok" style="display:none;margin-top:1rem;font-size:13px;color:#2ecc71;">
+        ✓ Senha alterada! Você já pode entrar.
+      </div>
+      <div class="conta-erro" id="rec-nova-erro" style="display:none;margin-top:.75rem;font-size:14px;color:#e74c3c;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONTA -->
+<div class="modal-conta-bg" id="modal-conta-bg" onclick="fecharModalContaBg(event)">
+  <div class="modal-conta">
+    <div class="modal-conta-cab">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="modal-conta-titulo">Minha Conta</div>
+        <button class="modal-login-fechar" style="position:static;" onclick="fecharModalConta()">✕</button>
+      </div>
+    </div>
+    <div class="modal-conta-corpo">
+      <div class="conta-info"><div class="conta-info-label">Nome</div><div class="conta-info-valor" id="conta-nome-val">—</div></div>
+      <div class="conta-info"><div class="conta-info-label">E-mail</div><div class="conta-info-valor" id="conta-email-val">—</div></div>
+      <div class="conta-info"><div class="conta-info-label">Telefone</div><div class="conta-info-valor" id="conta-tel-val">—</div></div>
+      <div class="conta-info"><div class="conta-info-label">Instagram</div><div class="conta-info-valor" id="conta-insta-val">—</div></div>
+
+      <div class="conta-separador">Alterar senha</div>
+      <p class="conta-senha-aviso">Digite sua senha atual e escolha uma nova (mínimo 6 caracteres).</p>
+      <div class="campo"><label class="campo-label">Senha atual</label><input type="password" class="campo-input" id="conta-senha-atual"></div>
+      <div class="campo"><label class="campo-label">Nova senha</label><input type="password" class="campo-input" id="conta-senha-nova"></div>
+      <div class="campo"><label class="campo-label">Confirmar nova senha</label><input type="password" class="campo-input" id="conta-senha-nova2"></div>
+      <button class="btn-auth" onclick="alterarSenha()">Salvar nova senha</button>
+      <div class="conta-ok" id="conta-ok">✓ Senha alterada com sucesso.</div>
+      <div class="conta-erro" id="conta-erro-msg">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LIVRO -->
+<div class="livro-modal-bg" id="livro-modal-bg">
+  <div class="livro-modal" id="livro-modal"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ══════════════════════════════════════════
+   SUPABASE — configuração
+══════════════════════════════════════════ */
+const SUPA_URL  = 'https://xfniavcbswqapietgjbe.supabase.co';
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmbmlhdmNic3dxYXBpZXRnamJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MzU1NDYsImV4cCI6MjA5MjIxMTU0Nn0.48EA6SISfpNhVvToEFC6FgXbv7lIsW-VtinGtWsYxr8';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+/* ── DADOS ── */
+const DIAS={
+  1:{titulo:"O Conflito por Dentro",fase:"A Mente",faseColor:"#D85A30",desc:"O sofrimento não nasce dos fatos e sim da briga por dentro com o que é. Quando pensamos que algo não deveria estar acontecendo, perdemos 100% das vezes.",indez:"Identifique UM pensamento com o qual você está em conflito agora mesmo. Escreva-o sem julgamento."},
+  2:{titulo:"A Pergunta que Muda Tudo",fase:"A Mente",faseColor:"#D85A30",desc:"A dúvida sistemática liberta: isso é verdade? O corpo reage a pensamentos como se fossem reais. A mente cria estresse ou cura.",indez:"Escolha um pensamento e pergunte: isso é absolutamente verdade? Escreva o que surgiu."},
+  3:{titulo:"As 4 Perguntas",fase:"A Mente",faseColor:"#D85A30",desc:"O método de Byron Katie: 1. Isso é verdade? 2. Você pode saber com certeza absoluta? 3. Como você reage quando acredita nisso? 4. Quem seria você sem esse pensamento?",indez:"Aplique as 4 perguntas no pensamento de ontem. Anote cada resposta."},
+  4:{titulo:"O Poder da Inversão",fase:"A Mente",faseColor:"#D85A30",desc:"O oposto de um pensamento estressante pode ser tão verdadeiro quanto a dor original — e devolve o poder de ação para você.",indez:"Inverta o pensamento estressante e encontre 3 exemplos reais da inversão na sua vida."},
+  5:{titulo:"Você Nunca Está Sozinho(a)",fase:"O Sistema",faseColor:"#3B6D11",desc:"Nós não entramos em nenhum lugar sozinhos. Carregamos nosso sistema familiar — suas potências e emaranhamentos.",indez:"Escreva o nome de 3 ancestrais que fazem parte de você, mesmo sem tê-los conhecido. O que eles trouxeram para a sua história?"},
+  6:{titulo:"Educação Começa em Casa",fase:"O Sistema",faseColor:"#3B6D11",desc:"A cura da ferida materna permite que a mulher pare de esperar permissão para viver e se torne autêntica.",indez:"Escreva uma frase de gratidão para sua mãe — mesmo que a relação seja complexa."},
+  7:{titulo:"O Corpo Participa",fase:"O Corpo",faseColor:"#185FA5",desc:"O trauma e as crenças deixam registros somáticos. A biologia responde à nova ordem estabelecida na mente.",indez:"Observe onde no corpo você sente o pensamento que pesa. Respire nesse lugar por 3 minutos e escreva o que percebeu."},
+  8:{titulo:"A Névoa que Passa",fase:"O Corpo",faseColor:"#185FA5",desc:"A realidade é sempre mais gentil do que a história que contamos sobre ela. O que nubla sua visão pode ser dissolvido.",indez:"Identifique UM hábito de pensamento que mais nubla sua visão hoje. Como seria sua vida sem ele?"},
+  9:{titulo:"O Toque de Tistu",fase:"O Corpo",faseColor:"#185FA5",desc:"A presença consciente tem o poder de transformar ambientes áridos. Onde você toca com clareza, nasce algo novo.",indez:"Escolha um ambiente difícil na sua vida e faça UM gesto de presença nele hoje. Conte o que fez."},
+  10:{titulo:"O Algoritmo do Universo",fase:"A Manifestação",faseColor:"#C8952A",desc:"O universo responde a movimentos pequenos e consistentes. O Indez sinaliza que a vida pode brotar aqui.",indez:"Qual é o sinal que você vai dar ao universo hoje? Escreva com clareza."},
+  11:{titulo:"Protocolo de 24 Horas",fase:"A Manifestação",faseColor:"#C8952A",desc:"Defina uma ação mínima e prática a ser realizada em até 24 horas. Ela mostra que você assumiu sua autoria.",indez:"Escreva sua ação de 24h. Comprometa-se agora."},
+  12:{titulo:"O Universo do Sim",fase:"A Manifestação",faseColor:"#C8952A",desc:"Assentir — aceitar plenamente. O universo amplifica aquilo que você decide começar. Você chegou. Celebre e convide.",indez:"Escreva a história dos seus 12 dias em 3 frases. O que mudou? O que você plantou? O que floresce agora?"}
+};
+const EMOJIS=[null,'🎒','🔍','❓','🔄','🌳','🏠','🫀','🌫️','🌸','🥚','⏰','🌟'];
+const FC={1:'f1',2:'f1',3:'f1',4:'f1',5:'f2',6:'f2',7:'f3',8:'f3',9:'f3',10:'f4',11:'f4',12:'f4'};
+
+/* estado global */
+let usuarioSessao = null;   // objeto auth do Supabase
+let perfilUsuario = null;   // linha da tabela usuarios
+let serieAtiva    = null;   // linha da tabela series
+let diaAberto     = null;
+let escrivaoContextoDia = null;
+
+// Escrivão usa Edge Function via fetch direto
+const EDGE_URL = 'https://xfniavcbswqapietgjbe.supabase.co/functions/v1/anthropic-proxy';
+const MODELO   = 'claude-sonnet-4-5';
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+async function iniciar(){
+  // Monta grade dos 12 dias
+  const g=document.getElementById('grade-dias');
+  for(let i=1;i<=12;i++){
+    const d=document.createElement('div');
+    d.className=`dia-item ${FC[i]}`;
+    d.id=`dia-${i}`;
+    d.onclick=()=>abrirDia(i);
+    d.innerHTML=`<span class="dia-emoji">${EMOJIS[i]}</span><div class="dia-num">Dia ${i}</div><div class="dia-nome">${DIAS[i].titulo}</div><div class="dia-ok"></div>`;
+    g.appendChild(d);
+  }
+
+  // Detecta se o usuário chegou via link de recuperação de senha
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('modo') === 'resetar-senha'){
+    // O Supabase já autenticou via token no hash da URL
+    // Abre direto o formulário de nova senha
+    document.getElementById('rec-passo1').style.display='none';
+    document.getElementById('rec-passo2').style.display='block';
+    document.getElementById('modal-rec-bg').classList.add('aberto');
+    // Limpa o parâmetro da URL sem recarregar
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+
+  // Verifica sessão ativa (ex: usuária volta depois de fechar o browser)
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session){
+    await carregarPerfil(session.user);
+  }
+
+  // Escuta mudanças de sessão (login / logout / refresh / recuperação de senha)
+  sb.auth.onAuthStateChange(async (_event, session) => {
+    if(_event === 'PASSWORD_RECOVERY'){
+      // Usuário clicou no link do e-mail — abre tela de nova senha
+      document.getElementById('rec-passo1').style.display='none';
+      document.getElementById('rec-passo2').style.display='block';
+      document.getElementById('rec-nova-ok').style.display='none';
+      document.getElementById('rec-nova-erro').style.display='none';
+      const btn = document.querySelector('#rec-passo2 .btn-auth');
+      if(btn){ btn.style.display='block'; btn.disabled=false; btn.textContent='Salvar nova senha'; }
+      document.getElementById('modal-rec-bg').classList.add('aberto');
+      return;
+    }
+    if(session){ await carregarPerfil(session.user); }
+    else { deslogar(); }
+  });
+}
+
+async function carregarPerfil(authUser){
+  usuarioSessao = authUser;
+
+  // Busca perfil
+  const { data: perfil } = await sb
+    .from('usuarios')
+    .select('*')
+    .eq('id', authUser.id)
+    .single();
+  perfilUsuario = perfil;
+
+  // Busca série ativa
+  const { data: serie } = await sb
+    .from('series')
+    .select('*')
+    .eq('usuario_id', authUser.id)
+    .eq('ativa', true)
+    .single();
+  serieAtiva = serie;
+
+  // Atualiza UI
+  const nome = perfil?.nome || authUser.email;
+  const primeiroNome = nome.split(' ')[0];
+  document.getElementById('ph-nome-usuario').textContent = primeiroNome;
+  document.getElementById('udm-nome').textContent = nome;
+  document.getElementById('udm-email').textContent = authUser.email;
+
+  await Promise.all([
+    marcarDiasSalvos(),
+    renderOvos(),
+    renderHistoricoEscrivao()
+  ]);
+
+  fecharModalLogin();
+  irParaPlataforma();
+}
+
+function deslogar(){
+  usuarioSessao = null;
+  perfilUsuario = null;
+  serieAtiva    = null;
+  document.getElementById('ph-nome-usuario').textContent = '—';
+  document.getElementById('plataforma').classList.remove('ativa');
+  document.getElementById('entrada').classList.add('ativa');
+}
+
+/* ══════════════════════════════════════════
+   FORÇA DA SENHA — validação completa
+   Requisitos: 8+ chars, maiúscula, número, especial
+══════════════════════════════════════════ */
+function analisarSenha(senha){
+  return {
+    temLen : senha.length >= 8,
+    temMai : /[A-Z]/.test(senha),
+    temMin : /[a-z]/.test(senha),
+    temNum : /[0-9]/.test(senha),
+    temEsp : /[^A-Za-z0-9]/.test(senha),
+  };
+}
+
+function senhaValida(senha){
+  const r = analisarSenha(senha);
+  return r.temLen && r.temMai && r.temMin && r.temNum && r.temEsp;
+}
+
+function calcularPontos(r){
+  return [r.temLen, r.temMai, r.temMin, r.temNum, r.temEsp].filter(Boolean).length;
+}
+
+function renderChecklist(reqs, mapa){
+  // mapa = { 'sr-len': temLen, 'sr-mai': temMai, ... }
+  Object.entries(mapa).forEach(([id, ok])=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.classList.toggle('ok', ok);
+    const ico = el.querySelector('.sr-icon');
+    if(ico) ico.textContent = ok ? '✓' : '';
+  });
+}
+
+function renderBarras(pts, prefixo){
+  const cor     = pts<=2 ? 'ativa-fraca' : pts<=3 ? 'ativa-media' : 'ativa-forte';
+  const rotulos = {1:'Fraca',2:'Fraca',3:'Média',4:'Quase lá!',5:'Forte ✓'};
+  const rotCls  = {1:'fraca',2:'fraca',3:'media',4:'media',5:'forte'};
+  for(let i=1;i<=5;i++){
+    const seg = document.getElementById(prefixo+'s'+i);
+    if(seg) seg.className = 'senha-forca-seg' + (i<=pts && pts>0 ? ' '+cor : '');
+  }
+  const txt = document.getElementById(prefixo+'-texto');
+  if(txt){
+    txt.className = 'senha-forca-label ' + (rotCls[pts]||'');
+    txt.textContent = pts > 0 ? rotulos[pts] : '';
+  }
+}
+
+function avaliarSenha(val){
+  const wrap = document.getElementById('senha-forca-wrap');
+  const errEl = document.getElementById('e-senha');
+  errEl.classList.remove('visivel');
+
+  if(!val){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+
+  const r   = analisarSenha(val);
+  const pts = calcularPontos(r);
+  renderBarras(pts, 'sf');
+  renderChecklist(r, {
+    'sr-len': r.temLen,
+    'sr-mai': r.temMai,
+    'sr-min': r.temMin,
+    'sr-num': r.temNum,
+    'sr-esp': r.temEsp,
+  });
+}
+
+function avaliarSenhaRec(val){
+  const wrap = document.getElementById('rec-forca-wrap');
+  if(!val){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+
+  const r   = analisarSenha(val);
+  const pts = calcularPontos(r);
+  renderBarras(pts, 'rfs');
+  renderChecklist(r, {
+    'rsr-len': r.temLen,
+    'rsr-mai': r.temMai,
+    'rsr-min': r.temMin,
+    'rsr-num': r.temNum,
+    'rsr-esp': r.temEsp,
+  });
+}
+
+/* ══════════════════════════════════════════
+   RECUPERAR SENHA
+══════════════════════════════════════════ */
+function abrirRecuperarSenha(){
+  fecharModalLogin();
+  document.getElementById('rec-passo1').style.display='block';
+  document.getElementById('rec-passo2').style.display='none';
+  document.getElementById('rec-email').value='';
+  document.getElementById('rec-ok').style.display='none';
+  document.getElementById('rec-erro').style.display='none';
+  document.getElementById('e-rec-email').classList.remove('visivel');
+  document.getElementById('modal-rec-bg').classList.add('aberto');
+}
+function fecharRecuperarSenha(){
+  document.getElementById('modal-rec-bg').classList.remove('aberto');
+}
+
+async function enviarRecuperacao(){
+  const email = document.getElementById('rec-email').value.trim();
+  const eEl   = document.getElementById('e-rec-email');
+  const okEl  = document.getElementById('rec-ok');
+  const errEl = document.getElementById('rec-erro');
+  okEl.style.display='none'; errEl.style.display='none';
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    eEl.classList.add('visivel'); return;
+  }
+  eEl.classList.remove('visivel');
+
+  const btn = document.querySelector('#rec-passo1 .btn-auth');
+  btn.disabled=true; btn.textContent='Enviando...';
+
+  const redirectTo = window.location.origin + window.location.pathname + '?modo=resetar-senha';
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+
+  btn.disabled=false; btn.textContent='Enviar link';
+
+  if(error){
+    errEl.textContent = 'Erro ao enviar. Verifique o e-mail e tente novamente.';
+    errEl.style.display='block';
+  } else {
+    okEl.style.display='block';
+    btn.style.display='none';
+  }
+}
+
+async function salvarNovaSenha(){
+  const nova  = document.getElementById('rec-nova-senha').value;
+  const nova2 = document.getElementById('rec-nova-senha2').value;
+  const eNova = document.getElementById('e-rec-nova');
+  const eConf = document.getElementById('e-rec-nova2');
+  const okEl  = document.getElementById('rec-nova-ok');
+  const errEl = document.getElementById('rec-nova-erro');
+  eNova.classList.remove('visivel'); eConf.classList.remove('visivel');
+  okEl.style.display='none'; errEl.style.display='none';
+
+  if(!senhaValida(nova)){
+    const r = analisarSenha(nova);
+    const faltam = [];
+    if(!r.temLen) faltam.push('mínimo 8 caracteres');
+    if(!r.temMai) faltam.push('uma letra maiúscula');
+    if(!r.temMin) faltam.push('uma letra minúscula');
+    if(!r.temNum) faltam.push('um número');
+    if(!r.temEsp) faltam.push('um caractere especial');
+    eNova.textContent = 'Falta: ' + faltam.join(', ') + '.';
+    eNova.classList.add('visivel');
+    document.getElementById('rec-forca-wrap').style.display='block';
+    avaliarSenhaRec(nova);
+    return;
+  }
+  if(nova !== nova2) { eConf.classList.add('visivel'); return; }
+
+  const btn = document.querySelector('#rec-passo2 .btn-auth');
+  btn.disabled=true; btn.textContent='Salvando...';
+
+  const { error } = await sb.auth.updateUser({ password: nova });
+  btn.disabled=false; btn.textContent='Salvar nova senha';
+
+  if(error){
+    errEl.textContent = 'Erro ao salvar. O link pode ter expirado. Solicite um novo.';
+    errEl.style.display='block';
+  } else {
+    okEl.style.display='block';
+    btn.style.display='none';
+    setTimeout(()=>{ fecharRecuperarSenha(); }, 2500);
+  }
+}
+
+/* ══════════════════════════════════════════
+   NAVEGAÇÃO
+══════════════════════════════════════════ */
+function abrirModalLogin(){
+  document.getElementById('modal-login-bg').classList.add('aberto');
+  document.getElementById('ml-login').style.display='block';
+  document.getElementById('ml-cadastro').style.display='none';
+  // Limpa erros
+  ['e-log-email','e-log'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('visivel');
+  });
+}
+function fecharModalLogin(){
+  document.getElementById('modal-login-bg').classList.remove('aberto');
+}
+function mostrarCadastroModal(){
+  document.getElementById('ml-login').style.display='none';
+  document.getElementById('ml-cadastro').style.display='block';
+}
+function mostrarLoginModal(){
+  document.getElementById('ml-cadastro').style.display='none';
+  document.getElementById('ml-login').style.display='block';
+}
+function abrirModalConta(){
+  if(!perfilUsuario) return;
+  document.getElementById('conta-nome-val').textContent  = perfilUsuario.nome    || '—';
+  document.getElementById('conta-email-val').textContent = perfilUsuario.email   || '—';
+  document.getElementById('conta-tel-val').textContent   = perfilUsuario.telefone|| '—';
+  document.getElementById('conta-insta-val').textContent = perfilUsuario.instagram||'—';
+  document.getElementById('conta-senha-atual').value='';
+  document.getElementById('conta-senha-nova').value='';
+  document.getElementById('conta-senha-nova2').value='';
+  document.getElementById('conta-ok').classList.remove('visivel');
+  document.getElementById('conta-erro-msg').classList.remove('visivel');
+  document.getElementById('modal-conta-bg').classList.add('aberto');
+}
+function fecharModalConta(){
+  document.getElementById('modal-conta-bg').classList.remove('aberto');
+}
+function fecharModalContaBg(e){
+  if(e.target===document.getElementById('modal-conta-bg')) fecharModalConta();
+}
+function toggleDropdown(){
+  document.getElementById('user-dropdown-menu').classList.toggle('aberto');
+}
+document.addEventListener('click',function(e){
+  const dd=document.getElementById('user-dropdown-menu');
+  const btn=document.getElementById('ph-nome-usuario');
+  if(dd&&!dd.contains(e.target)&&e.target!==btn) dd.classList.remove('aberto');
+});
+
+async function alterarSenha(){
+  const nova  = document.getElementById('conta-senha-nova').value;
+  const nova2 = document.getElementById('conta-senha-nova2').value;
+  const ok    = document.getElementById('conta-ok');
+  const err   = document.getElementById('conta-erro-msg');
+  ok.classList.remove('visivel');
+  err.classList.remove('visivel');
+  if(!senhaValida(nova)){
+    const r = analisarSenha(nova);
+    const faltam = [];
+    if(!r.temLen) faltam.push('mínimo 8 caracteres');
+    if(!r.temMai) faltam.push('uma letra maiúscula');
+    if(!r.temMin) faltam.push('uma letra minúscula');
+    if(!r.temNum) faltam.push('um número');
+    if(!r.temEsp) faltam.push('um caractere especial');
+    err.textContent='Falta: '+faltam.join(', ')+'.'; err.classList.add('visivel'); return;
+  }
+  if(nova!==nova2)  { err.textContent='As novas senhas não conferem.';             err.classList.add('visivel'); return; }
+
+  const { error } = await sb.auth.updateUser({ password: nova });
+  if(error){ err.textContent='Erro: '+error.message; err.classList.add('visivel'); return; }
+
+  document.getElementById('conta-senha-atual').value='';
+  document.getElementById('conta-senha-nova').value='';
+  document.getElementById('conta-senha-nova2').value='';
+  ok.classList.add('visivel');
+}
+
+function irParaPlataforma(){
+  document.getElementById('entrada').classList.remove('ativa');
+  document.getElementById('plataforma').classList.add('ativa');
+  ativarSecao('sala', document.querySelector('.pn-btn'));
+}
+/* ══════════════════════════════════════════
+   SEÇÕES
+══════════════════════════════════════════ */
+function ativarSecao(id,btn){
+  if(!usuarioSessao){ abrirModalLogin(); return; }
+  document.querySelectorAll('.secao').forEach(s=>s.classList.remove('ativa'));
+  document.getElementById('sec-'+id).classList.add('ativa');
+  document.querySelectorAll('.pn-btn').forEach(b=>b.classList.remove('ativo'));
+  if(btn) btn.classList.add('ativo');
+  if(id==='dias') verificarLivro();
+}
+
+/* ══════════════════════════════════════════
+   DIAS
+══════════════════════════════════════════ */
+async function marcarDiasSalvos(){
+  if(!serieAtiva) return;
+  const { data } = await sb
+    .from('reflexoes')
+    .select('dia, texto')
+    .eq('serie_id', serieAtiva.id);
+  (data||[]).forEach(r=>{
+    if(r.texto && r.texto.trim())
+      document.getElementById(`dia-${r.dia}`)?.classList.add('salvo');
+  });
+  verificarLivro();
+}
+
+async function abrirDia(n){
+  if(diaAberto===n){
+    document.getElementById('det-dia').style.display='none';
+    diaAberto=null;
+    document.querySelectorAll('.dia-item').forEach(d=>d.classList.remove('ativo'));
+    return;
+  }
+  diaAberto=n;
+  document.querySelectorAll('.dia-item').forEach(d=>d.classList.remove('ativo'));
+  document.getElementById(`dia-${n}`).classList.add('ativo');
+
+  const d = DIAS[n];
+  let escrita = '';
+  if(serieAtiva){
+    const { data } = await sb
+      .from('reflexoes')
+      .select('texto')
+      .eq('serie_id', serieAtiva.id)
+      .eq('dia', n)
+      .single();
+    escrita = data?.texto || '';
+  }
+
+  const det = document.getElementById('det-dia');
+  det.style.display='block';
+  det.innerHTML=`
+    <div class="det-fase" style="color:${d.faseColor}">${d.fase} · Dia ${n}</div>
+    <div class="det-titulo">${d.titulo}</div>
+    <div class="det-desc">${d.desc}</div>
+    <div class="det-indez"><div class="det-indez-label">Seu Indez de hoje</div><div class="det-indez-txt">${d.indez}</div></div>
+    <textarea class="det-escrita" id="det-escrita" placeholder="Escreva aqui o que surgiu para você neste dia...">${escrita}</textarea>
+    <div class="det-acoes">
+      <button class="btn-salvar" onclick="salvarDia(${n})">Salvar reflexão</button>
+      <button class="btn-fechar-det" onclick="fecharDia()">Fechar</button>
+      <span class="det-ok" id="det-ok">✓ Salvo — indo para o Escrivão...</span>
+    </div>
+  `;
+  det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function fecharDia(){
+  document.getElementById('det-dia').style.display='none';
+  document.querySelectorAll('.dia-item').forEach(d=>d.classList.remove('ativo'));
+  diaAberto=null;
+}
+
+async function salvarDia(n){
+  const txt = document.getElementById('det-escrita').value;
+  const ok  = document.getElementById('det-ok');
+
+  if(serieAtiva){
+    await sb.from('reflexoes').upsert({
+      serie_id:   serieAtiva.id,
+      usuario_id: usuarioSessao.id,
+      dia:        n,
+      texto:      txt
+    }, { onConflict: 'serie_id,dia' });
+  }
+
+  if(txt.trim()) document.getElementById(`dia-${n}`).classList.add('salvo');
+  ok.classList.add('visivel');
+
+  if(txt.trim()){
+    setTimeout(()=>{ irParaEscrivaoComDia(n, txt.trim()); }, 800);
+  } else {
+    setTimeout(()=>ok.classList.remove('visivel'), 2500);
+  }
+  verificarLivro();
+}
+
+async function verificarLivro(){
+  if(!serieAtiva){ document.getElementById('livro-bloco').style.display='none'; return; }
+  const { count } = await sb
+    .from('reflexoes')
+    .select('dia', { count:'exact', head:true })
+    .eq('serie_id', serieAtiva.id)
+    .neq('texto','');
+  document.getElementById('livro-bloco').style.display = (count>=12) ? 'block' : 'none';
+}
+
+/* ══════════════════════════════════════════
+   LIVRO
+══════════════════════════════════════════ */
+async function gerarLivro(){
+  const nome = perfilUsuario?.nome || 'Participante';
+  document.getElementById('carregando').style.display='flex';
+  document.getElementById('livro-erro').style.display='none';
+  document.getElementById('btn-gerar').disabled=true;
+
+  const { data: reflexoes } = await sb
+    .from('reflexoes')
+    .select('dia, texto')
+    .eq('serie_id', serieAtiva.id)
+    .order('dia');
+
+  let txt = '';
+  (reflexoes||[]).forEach(r=>{ if(r.texto) txt+=`Dia ${r.dia} — ${DIAS[r.dia].titulo}:\n${r.texto}\n\n`; });
+
+  try{
+    const data = await apiCall({
+      model:MODELO, max_tokens:2000,
+      system:'Você é o Escrivão Sistêmico do INDOZE. Analise a jornada de 12 dias e crie o livro "INDOZE que Nasceu". Responda APENAS em JSON sem markdown: {"titulo":"título personalizado","frase_semente":"frase poderosa","dias":[{"num":1,"emoji":"🌱","insight":"frase breve","transformacao":"ponto de potencial"}...],"pergunta":"E amanhã, o que você vai plantar?","celebracao":"mensagem pessoal"}',
+      messages:[{role:'user',content:`Nome: ${nome}\n\n${txt||'Participante completou os 12 dias.'}`}]
+    });
+    let a;
+    try{ a=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim()); }catch{ a=null; }
+
+    // Salva livro no banco
+    if(serieAtiva){
+      await sb.from('livros').upsert({
+        serie_id:     serieAtiva.id,
+        usuario_id:   usuarioSessao.id,
+        titulo:       a?.titulo || `INDOZE que Nasceu — ${nome}`,
+        frase_semente:a?.frase_semente || '',
+        conteudo_json:a || {}
+      }, { onConflict:'serie_id' });
+    }
+
+    renderLivro(nome, a, reflexoes||[]);
+  }catch{
+    document.getElementById('livro-erro').style.display='block';
+  }finally{
+    document.getElementById('carregando').style.display='none';
+    document.getElementById('btn-gerar').disabled=false;
+  }
+}
+
+function renderLivro(nome, a, reflexoes){
+  const titulo   = a?.titulo       || `INDOZE que Nasceu — ${nome}`;
+  const frase    = a?.frase_semente|| 'Uma ação por dia pode mudar a nossa vida.';
+  const pergunta = a?.pergunta     || 'E amanhã, o que você vai plantar?';
+  const celeb    = a?.celebracao   || 'Você chegou ao fim de uma série que transforma.';
+
+  let diasH='';
+  for(let i=1;i<=12;i++){
+    const r  = reflexoes.find(x=>x.dia===i);
+    const txt= r?.texto || '—';
+    const da = a?.dias?.find(d=>d.num===i);
+    diasH+=`<div class="livro-dia">
+      <div class="livro-dia-header"><span style="font-size:1.5rem;">${da?.emoji||EMOJIS[i]}</span><div><div class="livro-dia-num">${DIAS[i].fase} · Dia ${i}</div><div class="livro-dia-nome">${DIAS[i].titulo}</div></div></div>
+      ${da?.insight?`<div class="livro-dia-insight">"${da.insight}"</div>`:''}
+      <div class="livro-dia-escrita">${txt}</div>
+      ${da?.transformacao?`<div class="livro-dia-transf">✦ ${da.transformacao}</div>`:''}
+    </div>`;
+  }
+  document.getElementById('livro-modal').innerHTML=`
+    <div class="livro-capa">
+      <div class="livro-capa-titulo">📖 O E-Feito INDOZE</div>
+      <div class="livro-capa-sub" style="margin-bottom:1.5rem;letter-spacing:.08em;">Parei de brigar com os fatos e executei coisas diferentes em 12 dias.</div>
+      <div style="border-top:1px solid rgba(200,149,42,.25);padding-top:1.25rem;margin-top:.5rem;text-align:left;">
+        <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#888;margin-bottom:.4rem;">Autora da própria vida</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:#F0D488;margin-bottom:1rem;">${nome}</div>
+        <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+          <div><div style="font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:3px;">Investimento de Tempo</div><div style="font-size:13px;color:#D4C4A8;">12 Dias</div></div>
+          <div><div style="font-size:14px;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:3px;">O Retorno</div><div style="font-size:13px;color:#D4C4A8;">Conhecimento e Ação</div></div>
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;border-top:1px solid rgba(200,149,42,.15);padding-top:1.25rem;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;font-weight:300;color:#C8952A;line-height:1.7;">"Ideias e intenções não mudam a realidade, atitudes SIM! O universo não investe em planos perfeitos, ele amplifica e investe em quem tem a coragem de começar. Este E-Feito é a materialização de que você começou. Execute!"</div>
+      </div>
+      <div class="livro-capa-sub" style="margin-top:1.25rem;">BETTER TOGETHER SYSTEMIC · INDOZE</div>
+    </div>
+    <div class="livro-inner">
+      <div class="livro-frase"><div class="livro-frase-label">Sua frase-semente</div><div class="livro-frase-txt">"${frase}"</div></div>
+      ${diasH}
+      <div class="livro-final">
+        <div class="livro-final-pergunta">${pergunta}</div>
+        <div class="livro-final-txt">${celeb}</div>
+        <div class="livro-final-txt">Compartilhe sua história — marque @elianesimoescruz e convide mais pessoas para a próxima série.</div>
+        <div class="livro-final-assinatura">BETTER TOGETHER SYSTEMIC · Eliane Simões Cruz</div>
+      </div>
+      <div class="livro-btns">
+        <button class="btn-print" id="btn-baixar-pdf" onclick="gerarPDFEfeito()">⬇ Baixar E-Feito PDF</button>
+        <button class="btn-fechar-livro" onclick="document.getElementById('livro-modal-bg').style.display='none'">Fechar</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('livro-modal-bg').style.display='block';
+}
+
+/* ══════════════════════════════════════════
+   ESCRIVÃO
+══════════════════════════════════════════ */
+function irParaEscrivaoComDia(n, texto){
+  escrivaoContextoDia = n;
+  const d = DIAS[n];
+  document.getElementById('escriv-dia-ctx-num').textContent   = `${d.fase} · Dia ${n}`;
+  document.getElementById('escriv-dia-ctx-titulo').textContent = d.titulo;
+  document.getElementById('escriv-dia-ctx').classList.add('visivel');
+  document.getElementById('escriv-label').textContent = `Dia ${n} — ${d.titulo}: em que você está pensando?`;
+  document.getElementById('escriv-input').value = texto;
+  document.getElementById('escriv-resp').classList.remove('visivel');
+  document.getElementById('escriv-resp').innerHTML = '';
+  document.getElementById('escriv-pos-resp').style.display = 'none';
+  ativarSecao('escrivao', document.querySelectorAll('.pn-btn')[2]);
+  setTimeout(()=>{ document.getElementById('sec-escrivao').scrollIntoView({behavior:'smooth',block:'start'}); }, 150);
+}
+
+function limparContextoDia(){
+  escrivaoContextoDia = null;
+  document.getElementById('escriv-dia-ctx').classList.remove('visivel');
+  document.getElementById('escriv-label').textContent = 'O que está tirando a sua paz hoje?';
+}
+
+function irParaIndez(){
+  // Navega diretamente sem verificar login (seção é pública dentro da plataforma)
+  document.querySelectorAll('.secao').forEach(s=>s.classList.remove('ativa'));
+  document.getElementById('sec-indez').classList.add('ativa');
+  document.querySelectorAll('.pn-btn').forEach(b=>b.classList.remove('ativo'));
+  document.querySelectorAll('.pn-btn')[3].classList.add('ativo');
+  if(escrivaoContextoDia) document.getElementById('indez-dia').value = escrivaoContextoDia;
+  setTimeout(()=>{
+    const inp = document.getElementById('indez-input');
+    inp.scrollIntoView({behavior:'smooth',block:'center'});
+    inp.focus();
+    inp.style.borderColor = 'var(--ouro)';
+    setTimeout(()=>{ inp.style.borderColor = ''; }, 2000);
+  }, 200);
+}
+
+function irParaIndezComTexto(){
+  const texto = window._indezTextoEscolhido || '';
+  const dia   = window._indezDiaEscolhido   || null;
+  // Navega diretamente sem verificar login
+  document.querySelectorAll('.secao').forEach(s=>s.classList.remove('ativa'));
+  document.getElementById('sec-indez').classList.add('ativa');
+  document.querySelectorAll('.pn-btn').forEach(b=>b.classList.remove('ativo'));
+  document.querySelectorAll('.pn-btn')[3].classList.add('ativo');
+  setTimeout(()=>{
+    const inp   = document.getElementById('indez-input');
+    const diaEl = document.getElementById('indez-dia');
+    if(texto) inp.value = texto;
+    if(dia)   diaEl.value = dia;
+    else if(escrivaoContextoDia) diaEl.value = escrivaoContextoDia;
+    atualizarContador();
+    inp.scrollIntoView({behavior:'smooth',block:'center'});
+    inp.focus();
+    inp.style.borderColor = 'var(--ouro)';
+    inp.style.boxShadow   = '0 0 0 2px rgba(200,149,42,0.35)';
+    setTimeout(()=>{ inp.style.borderColor=''; inp.style.boxShadow=''; }, 3000);
+  }, 150);
+}
+
+function toggleHistItem(el){
+  const corpo  = el.nextElementSibling;
+  const toggle = el.querySelector('.escriv-hist-item-toggle');
+  const aberto = corpo.classList.toggle('aberto');
+  toggle.textContent = aberto ? '▲' : '▼';
+}
+
+async function renderHistoricoEscrivao(){
+  if(!serieAtiva) return;
+  const { data: hist } = await sb
+    .from('escrivao_historico')
+    .select('*')
+    .eq('serie_id', serieAtiva.id)
+    .order('criado_em', { ascending: true });
+
+  const cont  = document.getElementById('escriv-hist');
+  const lista = document.getElementById('escriv-hist-lista');
+
+  // Agrupa por dia
+  const grupos = {};
+  (hist||[]).forEach(h=>{
+    const key = h.dia_contexto != null ? String(h.dia_contexto) : 'livre';
+    if(!grupos[key]) grupos[key]=[];
+    grupos[key].push(h);
+  });
+
+  // Sempre exibe Dia 1 ao Dia 12 em sequência completa, nunca pula
+  let html = '';
+  for(let dia = 1; dia <= 12; dia++){
+    const key    = String(dia);
+    const itens  = grupos[key] || [];
+    const titulo = DIAS[dia]?.titulo || '';
+    const fase   = DIAS[dia]?.fase   || '';
+    const cor    = DIAS[dia]?.faseColor || 'var(--ouro)';
+
+    let itensHtml = '';
+    if(itens.length === 0){
+      itensHtml = `<div style="padding:.75rem 0;font-size:14px;color:var(--muted);font-style:italic;">Ainda não visitado.</div>`;
+    } else {
+      itensHtml = itens.map(h=>{
+        const preview = h.pergunta.substring(0,50)+(h.pergunta.length>50?'…':'');
+        const dataFmt = new Date(h.criado_em).toLocaleDateString('pt-BR');
+        return `
+          <div class="escriv-hist-item">
+            <div class="escriv-hist-item-cab" onclick="toggleHistItem(this)">
+              <span class="escriv-hist-item-data">${dataFmt}</span>
+              <span class="escriv-hist-item-preview">"${preview}"</span>
+              <span class="escriv-hist-item-toggle">▼</span>
+            </div>
+            <div class="escriv-hist-item-corpo">
+              <div class="escriv-hist-leitura">somente leitura</div>
+              <div class="escriv-hist-item-q">"${h.pergunta}"</div>
+              <div class="escriv-hist-item-r">${h.resposta}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    html += `
+      <div class="escriv-hist-grupo">
+        <div class="escriv-hist-grupo-header">
+          <span class="escriv-hist-grupo-dia" style="color:${cor};">Dia ${dia}</span>
+          <span class="escriv-hist-grupo-tema">— ${titulo}</span>
+          ${itens.length ? `<span style="font-size:11px;color:var(--muted);margin-left:auto;">${itens.length} registro${itens.length>1?'s':''}</span>` : ''}
+        </div>
+        ${itensHtml}
+      </div>`;
+  }
+
+  // Reflexões livres (sem dia) ao final
+  if(grupos['livre']?.length){
+    const livreHtml = grupos['livre'].map(h=>{
+      const preview = h.pergunta.substring(0,50)+(h.pergunta.length>50?'…':'');
+      const dataFmt = new Date(h.criado_em).toLocaleDateString('pt-BR');
+      return `
+        <div class="escriv-hist-item">
+          <div class="escriv-hist-item-cab" onclick="toggleHistItem(this)">
+            <span class="escriv-hist-item-data">${dataFmt}</span>
+            <span class="escriv-hist-item-preview">"${preview}"</span>
+            <span class="escriv-hist-item-toggle">▼</span>
+          </div>
+          <div class="escriv-hist-item-corpo">
+            <div class="escriv-hist-leitura">somente leitura</div>
+            <div class="escriv-hist-item-q">"${h.pergunta}"</div>
+            <div class="escriv-hist-item-r">${h.resposta}</div>
+          </div>
+        </div>`;
+    }).join('');
+    html += `
+      <div class="escriv-hist-grupo">
+        <div class="escriv-hist-grupo-header">
+          <span class="escriv-hist-grupo-dia">Reflexão livre</span>
+        </div>
+        ${livreHtml}
+      </div>`;
+  }
+
+  lista.innerHTML = html;
+  cont.style.display = 'block';
+}
+
+/* ── Extrai as 3 opções numeradas da resposta do Escrivão ── */
+function extrairOpcoes(texto){
+  // Detecta padrões: [ 1 ], [1], 1., Opção 1:, etc.
+  const padroes = [
+    /\[\s*1\s*\](.*?)(?=\[\s*2\s*\]|$)/s,
+    /\[\s*2\s*\](.*?)(?=\[\s*3\s*\]|$)/s,
+    /\[\s*3\s*\](.*?)(?=\[\s*4\s*\]|Qual|Continue|$)/s,
+  ];
+  const alt = [
+    /(?:opção|opcao|1[.\)])\s*[:\-–]?\s*(?:\*\*[^*]+\*\*[:\-–]?\s*)?(.*?)(?=(?:opção|opcao|2[.\)])|$)/is,
+    /(?:opção|opcao|2[.\)])\s*[:\-–]?\s*(?:\*\*[^*]+\*\*[:\-–]?\s*)?(.*?)(?=(?:opção|opcao|3[.\)])|$)/is,
+    /(?:opção|opcao|3[.\)])\s*[:\-–]?\s*(?:\*\*[^*]+\*\*[:\-–]?\s*)?(.*?)(?=(?:opção|opcao|4[.\)])|Qual|Continue|$)/is,
+  ];
+  const limpar = s => s ? s.replace(/\*/g,'').replace(/\n/g,' ').replace(/\s+/g,' ').trim() : '';
+  let r1='', r2='', r3='';
+  for(let i=0;i<3;i++){
+    const m1 = texto.match(padroes[i]);
+    if(m1 && limpar(m1[1]).length > 5){ [r1,r2,r3][i]; if(i===0)r1=limpar(m1[1]); else if(i===1)r2=limpar(m1[1]); else r3=limpar(m1[1]); }
+    else {
+      const m2 = texto.match(alt[i]);
+      if(m2){ if(i===0)r1=limpar(m2[1]); else if(i===1)r2=limpar(m2[1]); else r3=limpar(m2[1]); }
+    }
+  }
+  return [r1,r2,r3];
+}
+
+const TIPOS_OPCAO = ['Movimento Indez','Pare de brigar com os fatos','Um cuidado para seu emocional'];
+
+function mostrarOpcoes(opcoes, diaAtual){
+  const validas = opcoes.filter(o=>o && o.length > 5);
+  if(!validas.length){ document.getElementById('escriv-opcoes').classList.remove('visivel'); return; }
+  const grid = document.getElementById('escriv-opcoes-grid');
+  grid.innerHTML = '';
+  opcoes.forEach((txt, i)=>{
+    if(!txt || txt.length < 5) return;
+    const btn = document.createElement('button');
+    btn.className = 'escriv-opcao-btn';
+    btn.dataset.texto = txt;
+    btn.dataset.idx   = i;
+    btn.innerHTML = `
+      <div class="escriv-opcao-num">${i+1}</div>
+      <div style="flex:1;">
+        <div class="escriv-opcao-tipo">${TIPOS_OPCAO[i]||''}</div>
+        <div class="escriv-opcao-texto">${txt}</div>
+      </div>`;
+    btn.onclick = () => {
+      escolherOpcaoIndez(txt, i, diaAtual, btn);
+      // Auto-navega para o Indez após breve confirmação visual
+      setTimeout(()=>{ irParaIndezComTexto(); }, 900);
+    };
+    grid.appendChild(btn);
+  });
+  document.getElementById('escriv-opcoes').classList.add('visivel');
+}
+
+function escolherOpcaoIndez(texto, idx, dia, btnEl){
+  // Marca visualmente
+  document.querySelectorAll('.escriv-opcao-btn').forEach(b=>b.classList.remove('selecionada'));
+  btnEl.classList.add('selecionada');
+
+  // Guarda o texto escolhido numa variável global segura
+  window._indezTextoEscolhido = texto;
+  window._indezDiaEscolhido   = dia || escrivaoContextoDia || null;
+
+  // Preenche o campo do Indez imediatamente
+  document.getElementById('indez-input').value = texto;
+  if(window._indezDiaEscolhido) document.getElementById('indez-dia').value = window._indezDiaEscolhido;
+
+  // Exibe o botão de ir para Indez com mensagem de confirmação
+  const posResp = document.getElementById('escriv-pos-resp');
+  posResp.style.display = 'block';
+  posResp.innerHTML = `
+    <div style="background:rgba(200,149,42,.08);border-left:2px solid var(--ouro);padding:.85rem 1.1rem;margin-bottom:.75rem;font-size:15px;color:rgba(250,250,248,.88);line-height:1.6;">
+      ✓ Opção ${idx+1} escolhida. Vá ao Indez, edite se quiser e plante sua semente.
+    </div>
+    <button class="btn-ir-indez" onclick="irParaIndezComTexto()">→ Ir para Meu Indez</button>`;
+
+  // Sincroniza o contador se o dia foi definido
+  if(window._indezDiaEscolhido){ setTimeout(atualizarContador, 100); }
+}
+
+async function investigar(){
+  const p = document.getElementById('escriv-input').value.trim();
+  if(!p) return;
+  const btn  = document.getElementById('btn-inv');
+  const resp = document.getElementById('escriv-resp');
+  const erro = document.getElementById('escriv-erro');
+  btn.disabled=true; btn.textContent='Limpando a lente...';
+  resp.innerHTML='<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  resp.classList.add('visivel'); erro.classList.remove('visivel');
+  document.getElementById('escriv-opcoes').classList.remove('visivel');
+  document.getElementById('escriv-pos-resp').style.display='none';
+
+  const dCtx = escrivaoContextoDia;
+  let ctxDiaStr = '';
+  if(dCtx && DIAS[dCtx]){
+    const d = DIAS[dCtx];
+    const instrucaoDia = {
+      1:'Peça à pessoa para escrever um pensamento que lhe causa dor ou raiva sobre alguém. Valide a dor, mas mostre a diferença entre o fato e a "história" que ela conta. Ajude-a a identificar o "fiapo na lente".',
+      2:'Trabalhe a Pergunta 1: "Isso é verdade?" Se a pessoa disser sim, lembre-a de que a realidade é apenas o que é. Não lute com ela — apenas plante a dúvida com suavidade.',
+      3:'Trabalhe a Pergunta 2: "Você pode saber com absoluta certeza que isso é verdade?" Conduza-a para a "mente do não-sei", onde a liberdade começa.',
+      4:'Trabalhe a Pergunta 3: "Como você reage, e como seu corpo se sente, quando acredita nesse pensamento?" Mostre o custo exaustivo do conflito interior. Peça o registro somático.',
+      5:'Investigue como ela trata os outros e a si mesma quando está presa nessa história de dor. Sem julgamento — apenas espelho.',
+      6:'Trabalhe a Pergunta 4: "Quem seria você sem esse pensamento?" Guie uma visualização de paz e clareza. Deixe o silêncio falar.',
+      7:'Peça a Inversão para si: inverta a frase original apontando para ela mesma. Exija 3 exemplos genuínos de como isso é verdade na vida dela.',
+      8:'Peça a Inversão para o outro: inverta a frase para a outra pessoa. Exija 3 exemplos práticos de como ela fez exatamente o que critica.',
+      9:'Peça a Inversão de 180 graus: o oposto exato da frase original. Busque evidências dessa verdade ignorada na realidade dela.',
+      10:'Ensine que o universo amplifica o que começamos. Peça para ela escolher a inversão mais forte e usá-la como semente de libertação. Celebre a clareza.',
+      11:'Exija que ela defina UMA ação mínima, prática e que dependa só dela, para ser feita nas próximas 24 horas. Esse é o Indez. Sem delegação — só autoria.',
+      12:'Celebre o fim do conflito interior. Peça que ela expresse aceitação (assentimento) e gratidão pela realidade exatamente como ela é. Honre a jornada.'
+    }[dCtx]||'';
+    ctxDiaStr=`CONTEXTO DO DIA ${dCtx} — "${d.titulo}" (Fase: ${d.fase})\nTema: ${d.desc}\nIndez sugerido para hoje: ${d.indez}\nInstrução específica deste dia: ${instrucaoDia}\nResponda exclusivamente dentro do universo temático deste dia. Não antecipe os próximos dias.`;
+  }
+  const sysCtx = ctxDiaStr ? '\n\n' + ctxDiaStr : '';
+
+const sysBase = 'Você é o Espelho da Mente — a presença digital da jornada INDOZE, criada por Eli Simões Cruz / Better Together Systemic.\n\nSeu papel é ser um espelho sereno, empático, criativo e livre de julgamentos. Acolha com leveza, investigue com elegância, e ofereça sementes práticas com originalidade. Cada resposta deve soar nova, fresca — nunca mecânica ou repetitiva. Use metáforas variadas, imagens poéticas, referências ao cotidiano da pessoa. Seja surpreendente dentro da suavidade.\n\nNUNCA use os marcadores de passo como títulos ou cabeçalhos (como "Acolhimento Compassivo", "Investigação Serena" etc). Eles são instruções internas — a resposta deve fluir como uma conversa natural e acolhedora, sem rótulos visíveis.\n\nAssinatura obrigatória ao final de cada resposta: "Continue! Seu Espelho da Mente."\nNUNCA assine como "O Escrivão Sistêmico". NUNCA use a palavra "sistêmico". NUNCA use "assentio" — use sempre "assenti", "assentiu" ou "assentimento".\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTOM E CRIATIVIDADE\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nTom: Pacífico, acolhedor, gentil, claro e poético.\nSeja CRIATIVO — nunca comece duas respostas da mesma forma. Varie as metáforas: jardim, ninho, luz, água, raízes, estações, tecido, espelho, caminho, janela, respiração.\nEvite palavras repetitivas entre respostas: não comece sempre com "Que bom ter você aqui" ou "Compreendo".\nO que EVITAR: jamais use palavras agressivas como guerra, queimar, rebeldia, mesquinharia, luta ou vitimismo. Nunca diminua a dor da pessoa.\n\nVocabulário INDOZE — use naturalmente: Adulta Funcional, Universo do Sim, Efeito Indez, Névoa Mental, Espelho da Mente, Assentir e concordar, Amor à realidade, O algoritmo do universo.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nESTRUTURA INTERNA (não mostre os títulos)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nSeja breve — máximo 3 parágrafos fluidos. Internamente, passe pelos 4 movimentos:\n\n1) ACOLHIDA: Valide o sentimento com empatia e originalidade. Nunca repita a mesma abertura.\n2) INVESTIGAÇÃO: Escolha UMA das 4 perguntas de Byron Katie e traga-a de forma suave e criativa:\n   - Isso que você está pensando é verdade?\n   - Você pode saber, com absoluta certeza, que isso é verdade?\n   - Como o seu corpo se sente quando acredita nesse pensamento?\n   - Quem seria você, agora mesmo, se não acreditasse nessa história?\n3) MUDANÇA DE LENTE: Traga o foco de volta à pessoa de forma amorosa. Mostre que o poder de ficar em paz pertence a ela.\n4) SEMENTES PRÁTICAS (obrigatório — 3 opções numeradas, SEMPRE diferentes e criativas):\n\n[ 1 ] Movimento Indez — uma ação física pequena e original (não repita "tomar água" sempre — varie: mover o corpo, tocar algo natural, mudar de ambiente, olhar para o céu, etc).\n[ 2 ] Pare de brigar com os fatos — uma frase de assentimento à realidade, criativa e específica ao contexto da pessoa (não use sempre "diga SIM" — varie: escreva, sussurre, respire, observe, reconheça).\n[ 3 ] Um cuidado para seu emocional — um gesto de autocompaixão original (não repita "fechar os olhos e respirar" — varie: escrever uma carta para si, colocar a mão no coração, olhar uma foto especial, fazer uma pausa de 2 minutos, etc).\n\nTermine com: "Qual destas sementes você escolhe para o seu Indez de hoje?"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nCONTEXTO DE DIAS ANTERIORES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nSe o contexto incluir o histórico de dias anteriores, use-o para personalizar a resposta. Faça pontes entre o que a pessoa escreveu antes e o que ela traz agora. Isso cria continuidade e aprofundamento — ela se sente vista e lembrada.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSOBRE O MÉTODO E A PLATAFORMA\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nO EFEITO INDEZ: O Indez é o ovo de gesso deixado no ninho — a ação mínima e prática que sinaliza ao universo que a pessoa saiu da paralisia. O universo lê inícios, não planos.\n\nAS 4 PERGUNTAS (Byron Katie — The Work): Todo sofrimento vem de acreditar em um pensamento que briga com o que é.\n\nA ADULTA FUNCIONAL: Não é aquela que não sofre — é aquela que não deixa o sofrimento governar.\n\nO TOQUE DE TISTU (Maurice Druon): Onde colocamos presença consciente sem julgar, a vida floresce.\n\nA PEDAGOGIA SISTÊMICA (Olinda Guedes): Ninguém chega à vida vazio. Cada pessoa tem uma história familiar invisível. Honrar a ordem e o pertencimento traz paz.\n\nNUNCA use tom de acusação, piedade ou agressividade. A cura é sempre gentil.'
+
+  // Busca histórico de dias anteriores para dar contexto ao Espelho
+  let historicoCtx = '';
+  if(serieAtiva){
+    const { data: reflexoesAnt } = await sb.from('reflexoes').select('dia,texto').eq('serie_id', serieAtiva.id).order('dia');
+    if(reflexoesAnt && reflexoesAnt.length){
+      historicoCtx = '\n\nHISTÓRICO DE DIAS ANTERIORES (use para personalizar e criar continuidade):\n';
+      reflexoesAnt.forEach(r=>{ if(r.texto) historicoCtx += `Dia ${r.dia} — ${DIAS[r.dia]?.titulo||''}: "${r.texto.substring(0,200)}"\n`; });
+    }
+  }
+
+  try{
+    const data = await apiCall({
+      model:MODELO, max_tokens:1000,
+      system: sysBase+sysCtx+historicoCtx,
+      messages:[{role:'user',content:'Reflexão trazida: "'+p+'"'}]
+    });
+    const textoResposta = data.content.map(i=>i.text||'').join('');
+    resp.innerHTML='<p>'+textoResposta.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>';
+
+    // Extrai e exibe opções interativas (Passo 4 — todos os dias)
+    const opcoes = extrairOpcoes(textoResposta);
+    mostrarOpcoes(opcoes, dCtx);
+
+    // Salva no banco
+    if(serieAtiva){
+      await sb.from('escrivao_historico').insert({
+        serie_id:    serieAtiva.id,
+        usuario_id:  usuarioSessao.id,
+        dia_contexto:dCtx||null,
+        pergunta:    p,
+        resposta:    textoResposta
+      });
+    }
+    await renderHistoricoEscrivao();
+    // escriv-pos-resp é gerenciado por escolherOpcaoIndez quando há opções
+    if(!opcoes.some(o=>o&&o.length>5)){
+      document.getElementById('escriv-pos-resp').style.display='block';
+      document.getElementById('escriv-pos-resp').innerHTML='<button class="btn-ir-indez" onclick="irParaIndez()">→ Ir para Meu Indez</button>';
+    }
+  }catch(e){
+    resp.classList.remove('visivel');
+    const msg = e.message || '';
+    let textoErro;
+    if(msg.includes('Sess\u00e3o'))        textoErro = 'Sess\u00e3o expirada. Recarregue a p\u00e1gina e fa\u00e7a login novamente.';
+    else if(msg.includes('529'))            textoErro = 'A API Anthropic est\u00e1 sobrecarregada. Aguarde 30 segundos e tente novamente.';
+    else if(msg.includes('401')||msg.includes('403')) textoErro = 'Erro de autentica\u00e7\u00e3o na API. Verifique a chave Anthropic na Edge Function.';
+    else if(msg.includes('404'))            textoErro = 'Edge Function n\u00e3o encontrada. Verifique o deploy no Supabase.';
+    else if(msg.includes('500')||msg.includes('502')) textoErro = 'Erro interno na Edge Function. Verifique os logs no Supabase.';
+    else if(msg.includes('Failed to fetch')||msg.includes('NetworkError')) textoErro = 'Sem conex\u00e3o com o servidor. Verifique sua internet.';
+    else                                    textoErro = 'Erro: ' + (msg || 'desconhecido. Abra o console (F12) para detalhes.');
+    erro.textContent = textoErro;
+    erro.classList.add('visivel');
+    console.error('[Escriv\u00e3o] Erro real:', e);
+  }finally{
+    btn.disabled=false; btn.textContent='🔍 O que ainda não vejo?';
+  }
+}
+
+/* ══════════════════════════════════════════
+   INDEZ
+══════════════════════════════════════════ */
+async function atualizarContador(){
+  const diaVal = document.getElementById('indez-dia').value;
+  const dia    = parseInt(diaVal);
+  const contEl = document.getElementById('indez-contador');
+  if(!diaVal||isNaN(dia)||dia<1||dia>12){ contEl.classList.remove('visivel'); return; }
+
+  let qtd = 0;
+  if(serieAtiva){
+    const { count } = await sb
+      .from('indez')
+      .select('id',{count:'exact',head:true})
+      .eq('serie_id', serieAtiva.id)
+      .eq('dia', dia);
+    qtd = count||0;
+  } else {
+    try {
+      const local = JSON.parse(localStorage.getItem('indez_local')||'[]');
+      qtd = local.filter(o=>o.dia===dia).length;
+    } catch(e){ qtd=0; }
+  }
+  document.getElementById('indez-contador-dia').textContent = dia;
+  document.getElementById('indez-contador-qtd').textContent = qtd;
+  contEl.classList.add('visivel');
+}
+
+async function botarOvo(){
+  const txt    = document.getElementById('indez-input').value.trim();
+  const diaVal = document.getElementById('indez-dia').value;
+  const dia    = parseInt(diaVal);
+  const erroEl = document.getElementById('indez-erro');
+
+  if(!txt){ erroEl.textContent='Escreva seu Indez antes de registrar.'; erroEl.classList.add('visivel'); return; }
+  if(!diaVal||isNaN(dia)||dia<1||dia>12){ erroEl.textContent='Informe um dia válido entre 1 e 12.'; erroEl.classList.add('visivel'); return; }
+  erroEl.classList.remove('visivel');
+
+  const btnPlantar = document.querySelector('.btn-plantar');
+  if(btnPlantar){ btnPlantar.disabled=true; btnPlantar.textContent='Plantando...'; }
+
+  if(serieAtiva){
+    const { error } = await sb.from('indez').insert({
+      serie_id:   serieAtiva.id,
+      usuario_id: usuarioSessao.id,
+      dia,
+      texto:      txt
+    });
+    if(error){
+      erroEl.textContent = error.message.includes('Limite') ? 'Você já plantou 3 Indez no Dia '+dia+'.' : 'Erro ao salvar. Tente novamente.';
+      erroEl.classList.add('visivel');
+      if(btnPlantar){ btnPlantar.disabled=false; btnPlantar.textContent='Plantar semente'; }
+      return;
+    }
+  } else {
+    // Salva localmente quando não há sessão ativa
+    const chave = 'indez_local';
+    let local = [];
+    try { local = JSON.parse(localStorage.getItem(chave)||'[]'); } catch(e){ local=[]; }
+    const qtdDia = local.filter(o=>o.dia===dia).length;
+    if(qtdDia>=3){
+      erroEl.textContent = 'Você já plantou 3 Indez no Dia '+dia+'.';
+      erroEl.classList.add('visivel');
+      if(btnPlantar){ btnPlantar.disabled=false; btnPlantar.textContent='Plantar semente'; }
+      return;
+    }
+    local.push({ dia, texto:txt, numero_semente: qtdDia+1, plantado_em: new Date().toISOString() });
+    try { localStorage.setItem(chave, JSON.stringify(local)); } catch(e){}
+  }
+
+  // Feedback visual de sucesso + mensagem de gancho para próximo dia
+  const form = document.querySelector('.indez-form');
+  let okMsg = document.getElementById('indez-ok-msg');
+  if(!okMsg){
+    okMsg = document.createElement('div');
+    okMsg.id = 'indez-ok-msg';
+    okMsg.style.cssText = 'margin-top:1rem;display:none;';
+    form.appendChild(okMsg);
+  }
+
+  // Monta mensagem de conclusão com gancho para o próximo dia
+  const proximoDia = dia < 12 ? dia + 1 : null;
+  const temaNome = proximoDia ? (DIAS[proximoDia]?.titulo || '') : '';
+  let msgHtml = `
+    <div style="background:rgba(200,149,42,.08);border:1px solid rgba(200,149,42,.25);padding:1.25rem 1.5rem;margin-bottom:.75rem;">
+      <div style="font-size:18px;color:#2ecc71;font-weight:500;margin-bottom:.5rem;">🌱 Semente plantada! Dia ${dia} concluído.</div>
+      <div style="font-size:15px;color:rgba(250,250,248,.75);line-height:1.7;margin-bottom:.75rem;">
+        Você escreveu: <em style="color:var(--ouro-claro);">"${txt}"</em><br>
+        Pense em como você vai agir daqui para frente com essa semente.
+      </div>
+      ${proximoDia ? `
+      <div style="border-top:1px solid rgba(200,149,42,.15);padding-top:.85rem;margin-top:.5rem;">
+        <div style="font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--ouro);margin-bottom:.4rem;">Amanhã — Dia ${proximoDia}</div>
+        <div style="font-size:16px;color:var(--branco);font-weight:400;">${temaNome}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:.3rem;">Volte amanhã e continue a sua jornada. O universo já leu o seu início de hoje. ✦</div>
+      </div>` : `
+      <div style="border-top:1px solid rgba(200,149,42,.15);padding-top:.85rem;color:var(--ouro-claro);font-size:15px;">
+        ✦ Você chegou ao Dia 12! Sua jornada INDOZE está completa. Celebre e gere seu E-Feito.
+      </div>`}
+    </div>`;
+  okMsg.innerHTML = msgHtml;
+  okMsg.style.display = 'block';
+
+  document.getElementById('indez-input').value='';
+  if(btnPlantar){ btnPlantar.disabled=false; btnPlantar.textContent='Plantar semente'; }
+  await atualizarContador();
+  await renderOvos();
+}
+
+async function renderOvos(){
+  const lista = document.getElementById('ovos-lista');
+  let ovos = [];
+
+  if(serieAtiva){
+    const { data } = await sb
+      .from('indez')
+      .select('*')
+      .eq('serie_id', serieAtiva.id)
+      .order('dia').order('numero_semente');
+    ovos = data || [];
+  } else {
+    // Lê do localStorage quando sem sessão
+    try { ovos = JSON.parse(localStorage.getItem('indez_local')||'[]'); } catch(e){ ovos=[]; }
+    ovos.sort((a,b)=> a.dia - b.dia || a.numero_semente - b.numero_semente);
+  }
+
+  if(!ovos){ lista.innerHTML='<div style="padding:1.5rem 0;font-size:15px;color:var(--muted);">Nenhum Indez plantado ainda. Comece hoje.</div>'; return; }
+
+  if(!ovos||!ovos.length){ lista.innerHTML='<div style="padding:1.5rem 0;font-size:15px;color:var(--muted);">Nenhum Indez plantado ainda. Comece hoje.</div>'; return; }
+
+  const grupos = {};
+  ovos.forEach(o=>{ if(!grupos[o.dia]) grupos[o.dia]=[]; grupos[o.dia].push(o); });
+  const diasOrdenados = Object.keys(grupos).map(Number).sort((a,b)=>b-a);
+
+  lista.innerHTML = diasOrdenados.map(dia=>{
+    const itens   = grupos[dia];
+    const qtd     = itens.length;
+    const cheio   = qtd>=3;
+    const nomeDia = DIAS[dia]?.titulo || 'Dia '+dia;
+    const itensHtml = itens.map((o,i)=>`
+      <div class="ovo-item">
+        <div class="ovo-num">${i+1}</div>
+        <div>
+          <div class="ovo-txt">${o.texto}</div>
+          <div class="ovo-meta">${new Date(o.plantado_em).toLocaleDateString('pt-BR')}</div>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="ovo-grupo">
+        <div class="ovo-grupo-header">
+          <span class="ovo-grupo-titulo">🥚 Dia ${dia} — ${nomeDia}</span>
+          <span class="ovo-grupo-badge${cheio?' cheio':''}">${qtd}/3${cheio?' · completo':''}</span>
+        </div>
+        ${itensHtml}
+      </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════ */
+async function cadastrar(){
+  const nome   = document.getElementById('cad-nome').value.trim();
+  const email  = document.getElementById('cad-email').value.trim();
+  const tel    = document.getElementById('cad-tel').value.trim();
+  const insta  = document.getElementById('cad-insta').value.trim();
+  const senha  = document.getElementById('cad-senha').value;
+  const senha2 = document.getElementById('cad-senha2').value;
+  let ok=true;
+  const v=(id,msg,cond)=>{const e=document.getElementById(id);const i=e.previousElementSibling;if(cond){e.textContent=msg;e.classList.add('visivel');if(i)i.classList.add('erro');ok=false;}else{e.classList.remove('visivel');if(i)i.classList.remove('erro');}};
+  v('e-nome','Informe seu nome.',!nome);
+  v('e-email','E-mail inválido.',!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+  v('e-tel','Apenas números.',!/^\d{8,}$/.test(tel));
+  v('e-insta','Deve começar com @.',!insta.startsWith('@'));
+
+  // Validação completa da senha
+  const r = analisarSenha(senha);
+  if(!r.temLen || !r.temMai || !r.temNum || !r.temEsp){
+    const faltam = [];
+    if(!r.temLen) faltam.push('mínimo 8 caracteres');
+    if(!r.temMai) faltam.push('uma letra maiúscula');
+    if(!r.temMin) faltam.push('uma letra minúscula');
+    if(!r.temNum) faltam.push('um número');
+    if(!r.temEsp) faltam.push('um caractere especial');
+    const eEl = document.getElementById('e-senha');
+    eEl.textContent = 'Falta: ' + faltam.join(', ') + '.';
+    eEl.classList.add('visivel');
+    // Garante que o checklist está visível
+    document.getElementById('senha-forca-wrap').style.display='block';
+    avaliarSenha(senha);
+    ok = false;
+  } else {
+    document.getElementById('e-senha').classList.remove('visivel');
+  }
+
+  v('e-senha2','Senhas não conferem.',senha!==senha2);
+  if(!ok) return;
+
+  const btnCad = document.querySelector('#ml-cadastro .btn-auth');
+  btnCad.disabled=true; btnCad.textContent='Criando conta...';
+
+  const { error } = await sb.auth.signUp({
+    email, password: senha,
+    options:{ data:{ nome, telefone:tel, instagram:insta } }
+  });
+
+  btnCad.disabled=false; btnCad.textContent='Criar conta';
+
+  if(error){
+    let msg = error.message;
+    if(msg.includes('already registered')) msg = 'Este e-mail já possui cadastro. Clique em Entrar.';
+    if(msg.includes('password')) msg = 'Senha fraca. Use pelo menos 8 caracteres.';
+    if(msg.includes('rate')) msg = 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+    document.getElementById('e-senha2').textContent = msg;
+    document.getElementById('e-senha2').classList.add('visivel');
+    return;
+  }
+
+  // Sucesso — mostra mensagem de confirmação
+  document.querySelector('#ml-cadastro').innerHTML = `
+    <div style="text-align:center;padding:1rem 0;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🌱</div>
+      <h2 class="auth-titulo" style="margin-bottom:.75rem;">Conta criada!</h2>
+      <p class="auth-sub" style="line-height:1.7;">
+        Enviamos um e-mail de confirmação para<br>
+        <strong style="color:var(--branco);">${email}</strong><br><br>
+        Clique no link do e-mail e depois volte aqui para entrar.
+      </p>
+      <button class="btn-auth" style="margin-top:1.5rem;" onclick="mostrarLoginModal()">Ir para o login</button>
+    </div>
+  `;
+}
+
+async function fazerLogin(){
+  const email = document.getElementById('log-email').value.trim();
+  const senha = document.getElementById('log-senha').value;
+  const ee    = document.getElementById('e-log-email');
+  const el    = document.getElementById('e-log');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ ee.classList.add('visivel'); return; }
+  ee.classList.remove('visivel');
+
+  const btnLog = document.querySelector('#ml-login .btn-auth');
+  btnLog.disabled=true; btnLog.textContent='Entrando...';
+
+  const { error } = await sb.auth.signInWithPassword({ email, password:senha });
+  btnLog.disabled=false; btnLog.textContent='Entrar';
+  if(error){ el.classList.add('visivel'); }
+  // sucesso: onAuthStateChange cuida do resto
+}
+
+async function sair(){
+  document.getElementById('user-dropdown-menu').classList.remove('aberto');
+  try { await sb.auth.signOut(); } catch(e){ /* ignora erros de rede */ }
+  deslogar();
+}
+
+function mostrarLogin()   { mostrarLoginModal();   }
+function mostrarCadastro(){ mostrarCadastroModal(); }
+
+/* ══════════════════════════════════════════
+   API — Edge Function Supabase (verify_jwt: false)
+   Chave Anthropic fica segura no servidor
+══════════════════════════════════════════ */
+async function apiCall(body, tentativas=3){
+  // Remove o campo 'model' do body — a Edge Function usa modelo fixo
+  const { model, ...resto } = body;
+  for(let i=0; i<tentativas; i++){
+    try{
+      const r = await fetch(EDGE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(resto),
+      });
+      const d = await r.json();
+      if(!r.ok) throw new Error(d?.error || 'Erro HTTP ' + r.status);
+      if(d.error) throw new Error(d.error);
+      return d;
+    }catch(e){
+      if(i === tentativas-1) throw e;
+      await new Promise(r => setTimeout(r, 1500*(i+1)));
+    }
+  }
+}
+
+/* ══════════════════════════════════════════
+   GERADOR DE PDF — E-FEITO INDOZE
+   Estilo: NotebookLM — limpo, moderno, branco
+══════════════════════════════════════════ */
+async function gerarPDFEfeito(){
+  const btn = document.getElementById('btn-baixar-pdf');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Gerando PDF...'; }
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const W=210, H=297, ML=18, MR=18, TW=W-ML-MR;
+
+    // ── Paleta NotebookLM-inspired (fundo branco, acentos de marca)
+    const OURO      = [180,125,20];
+    const OURO_BG   = [255,248,230];
+    const OURO_MED  = [212,160,50];
+    const VERDE     = [34,139,80];
+    const VERDE_BG  = [236,252,243];
+    const AZUL      = [37,99,180];
+    const AZUL_BG   = [237,244,255];
+    const LARANJA   = [200,80,40];
+    const LAR_BG    = [255,242,236];
+    const CINZA_ESC = [30,30,28];
+    const CINZA_MED = [90,90,85];
+    const CINZA_CLR = [200,200,196];
+    const CINZA_BG  = [246,246,244];
+    const BRANCO    = [255,255,255];
+    const PRETO     = [20,20,18];
+    const INSTA     = [150,50,180];
+
+    // ── Dados da pessoa
+    const nome         = perfilUsuario?.nome || 'Participante';
+    const primeiroNome = nome.split(' ')[0];
+    const email        = perfilUsuario?.email || usuarioSessao?.email || '';
+    const insta        = perfilUsuario?.instagram || '';
+    const dataHoje     = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+    const nomeArquivo  = `${primeiroNome}-E-Feito-INDOZE-12-Dias.pdf`;
+
+    // ── Busca dados do banco
+    let reflexoes=[], indezItens=[], escrivaoHist=[];
+    if(serieAtiva){
+      const [r1,r2,r3] = await Promise.all([
+        sb.from('reflexoes').select('dia,texto').eq('serie_id',serieAtiva.id).order('dia'),
+        sb.from('indez').select('dia,texto,numero_semente').eq('serie_id',serieAtiva.id).order('dia').order('numero_semente'),
+        sb.from('escrivao_historico').select('dia_contexto,pergunta,resposta').eq('serie_id',serieAtiva.id).order('criado_em',{ascending:true})
+      ]);
+      reflexoes    = r1.data||[];
+      indezItens   = r2.data||[];
+      escrivaoHist = r3.data||[];
+    }
+
+    // ── Métricas gerais
+    const totalRef  = reflexoes.filter(r=>r.texto?.trim()).length;
+    const totalSem  = indezItens.length;
+    const totalInt  = escrivaoHist.length;
+    const pct       = Math.round((totalRef/12)*100);
+
+    // ── Helpers
+    const fill   = (...rgb)=> doc.setFillColor(...rgb);
+    const stroke = (...rgb)=> doc.setDrawColor(...rgb);
+    const txt    = (...rgb)=> doc.setTextColor(...rgb);
+    const font   = (f,s,sz)=>{ doc.setFont(f,s); doc.setFontSize(sz); };
+    const box    = (x,y,w,h,r=0)=>{ if(r) doc.roundedRect(x,y,w,h,r,r,'F'); else doc.rect(x,y,w,h,'F'); };
+
+    // Texto com quebra automática, retorna novo Y
+    const wrapTxt = (text,x,y,maxW,lh)=>{
+      const lines=doc.splitTextToSize(String(text||'—'),maxW);
+      doc.text(lines,x,y);
+      return y+lines.length*lh;
+    };
+
+    // Rodapé padrão (chamado em cada página)
+    const addRodape = (pag)=>{
+      fill(...CINZA_BG); box(0,H-14,W,14);
+      stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(0,H-14,W,H-14);
+      font('helvetica','normal',6.5); txt(...CINZA_MED);
+      doc.text('Better Together Systemic  ·  Eliane Simões Cruz',ML,H-8);
+      txt(...INSTA);
+      doc.textWithLink('@elianesimoescruz',W/2,H-8,{align:'center',url:'https://instagram.com/elianesimoescruz'});
+      txt(...CINZA_MED);
+      doc.text(`Pág. ${pag}`,W-ML,H-8,{align:'right'});
+    };
+
+    // Cabeçalho padrão de página interna
+    const addHeader = (label)=>{
+      fill(...BRANCO); box(0,0,W,14);
+      stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(0,14,W,14);
+      font('helvetica','bold',7); txt(...OURO);
+      doc.text('INDOZE — 12 DIAS POR DENTRO',ML,9);
+      font('helvetica','normal',7); txt(...CINZA_MED);
+      doc.text(label,W-ML,9,{align:'right'});
+    };
+
+    // Fase → cor
+    const faseCor = {
+      'A Mente':       LARANJA,
+      'O Sistema':     VERDE,
+      'O Corpo':       AZUL,
+      'A Manifestação':OURO_MED
+    };
+    const faseBg = {
+      'A Mente':       LAR_BG,
+      'O Sistema':     VERDE_BG,
+      'O Corpo':       AZUL_BG,
+      'A Manifestação':OURO_BG
+    };
+
+    // ══════════════════════════════════════════════════════
+    // PÁG 1 — CAPA  (fundo branco, design moderno)
+    // ══════════════════════════════════════════════════════
+    fill(...BRANCO); box(0,0,W,H);
+
+    // Faixa superior dourada sólida
+    fill(...OURO); box(0,0,W,52);
+
+    // Folha decorativa (SVG-like)
+    fill(255,255,255,40); // pseudo-transparente
+    stroke(255,255,255); doc.setLineWidth(0.8);
+    doc.line(W-40,6,W-30,18); doc.line(W-30,18,W-20,6);
+    doc.line(W-30,6,W-30,18);
+    doc.line(W-52,6,W-42,18); doc.line(W-42,18,W-32,6);
+
+    // Logo Better Together
+    font('helvetica','bold',8); txt(255,255,255);
+    doc.text('BETTER TOGETHER SYSTEMIC',ML,14);
+    font('helvetica','normal',7);
+    doc.text('Eliane Simões Cruz · Psicopedagoga e Terapeuta',ML,20);
+
+    // Título INDOZE na faixa
+    font('helvetica','bold',34); txt(255,255,255);
+    doc.text('INDOZE',ML,44);
+    font('helvetica','normal',10);
+    doc.text('12 DIAS POR DENTRO',ML+1,51);
+
+    // Bloco de boas-vindas personalizado
+    const nomeY = 68;
+    font('helvetica','normal',10); txt(...CINZA_MED);
+    doc.text('Este E-Feito pertence a',ML,nomeY);
+    font('helvetica','bold',26); txt(...PRETO);
+    doc.text(nome,ML,nomeY+10);
+    stroke(...OURO); doc.setLineWidth(1.5);
+    doc.line(ML,nomeY+14,ML+doc.getTextWidth(nome),nomeY+14);
+
+    font('helvetica','normal',9); txt(...CINZA_MED);
+    doc.text(`Concluído em ${dataHoje}`,ML,nomeY+22);
+
+    // Card sumário de conquistas
+    const cy=102;
+    fill(...CINZA_BG); box(ML,cy,TW,36,3);
+    stroke(...CINZA_CLR); doc.setLineWidth(0.3);
+    doc.roundedRect(ML,cy,TW,36,3,3,'S');
+
+    font('helvetica','bold',8); txt(...CINZA_MED);
+    doc.text('SUA JORNADA EM NÚMEROS',ML+8,cy+9);
+
+    const stats=[
+      {v:String(totalRef),l:'Dias refletidos',c:AZUL},
+      {v:String(totalSem),l:'Sementes plantadas',c:VERDE},
+      {v:String(totalInt),l:'Interações com o Espelho',c:OURO},
+      {v:`${pct}%`,l:'Taxa de conclusão',c:LARANJA}
+    ];
+    stats.forEach((s,i)=>{
+      const sx=ML+8+i*42;
+      fill(...s.c); box(sx,cy+13,3,18,1);
+      font('helvetica','bold',16); txt(...s.c);
+      doc.text(s.v,sx+7,cy+24);
+      font('helvetica','normal',6.5); txt(...CINZA_MED);
+      const sl=doc.splitTextToSize(s.l,35);
+      doc.text(sl,sx+7,cy+28);
+    });
+
+    // Citação central
+    fill(...OURO_BG); box(ML,cy+44,TW,28,3);
+    stroke(...OURO_MED); doc.setLineWidth(0.3);
+    doc.roundedRect(ML,cy+44,TW,28,3,3,'S');
+    fill(...OURO_MED); box(ML,cy+44,3,28,1);
+    font('helvetica','italic',10); txt(...CINZA_ESC);
+    doc.text('"Parei de brigar com os fatos e executei',ML+8,cy+55);
+    doc.text('coisas diferentes em 12 dias."',ML+8,cy+63);
+    font('helvetica','normal',7.5); txt(...OURO);
+    doc.text('— Método INDOZE · Better Together Systemic',ML+8,cy+68);
+
+    // 4 fases visuais
+    const fY=cy+80;
+    font('helvetica','bold',8); txt(...CINZA_MED);
+    doc.text('OS 4 MOMENTOS DA JORNADA',ML,fY);
+    const fases=[
+      {n:'A Mente',d:'Dias 1–4',c:LARANJA,bg:LAR_BG},
+      {n:'O Sistema',d:'Dias 5–6',c:VERDE,bg:VERDE_BG},
+      {n:'O Corpo',d:'Dias 7–9',c:AZUL,bg:AZUL_BG},
+      {n:'Manifestação',d:'Dias 10–12',c:OURO_MED,bg:OURO_BG}
+    ];
+    fases.forEach((f,i)=>{
+      const fx=ML+i*44;
+      fill(...f.bg); box(fx,fY+5,40,22,2);
+      fill(...f.c); box(fx,fY+5,40,4,2);
+      font('helvetica','bold',8); txt(...f.c);
+      doc.text(f.n,fx+20,fY+16,{align:'center'});
+      font('helvetica','normal',7); txt(...CINZA_MED);
+      doc.text(f.d,fx+20,fY+22,{align:'center'});
+    });
+
+    // Barra de progresso
+    const bY=fY+36;
+    font('helvetica','normal',7); txt(...CINZA_MED);
+    doc.text(`Progresso: ${totalRef} de 12 dias registrados`,ML,bY);
+    fill(...CINZA_CLR); box(ML,bY+3,TW,4,2);
+    fill(...OURO_MED); box(ML,bY+3,TW*(totalRef/12),4,2);
+
+    // Mensagem personalizada
+    fill(...CINZA_BG); box(ML,bY+14,TW,30,3);
+    font('helvetica','bold',9); txt(...PRETO);
+    doc.text(`${primeiroNome}, você fez algo raro:`,ML+8,bY+24);
+    font('helvetica','normal',9); txt(...CINZA_MED);
+    doc.text('escolheu olhar para dentro e agiu. Cada semente',ML+8,bY+31);
+    doc.text('plantada aqui é a prova de que o universo já leu',ML+8,bY+37);
+    doc.text('o seu início. O E-Feito é seu — criado por você.',ML+8,bY+43);
+
+    // Rodapé capa
+    stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(ML,H-20,W-ML,H-20);
+    font('helvetica','bold',7); txt(...OURO);
+    doc.text('BETTER TOGETHER SYSTEMIC',ML,H-14);
+    font('helvetica','normal',7); txt(...CINZA_MED);
+    doc.text('Eliane Simões Cruz · Psicopedagoga e Terapeuta',ML,H-9);
+    txt(...INSTA);
+    doc.textWithLink('@elianesimoescruz',W-ML,H-9,{align:'right',url:'https://instagram.com/elianesimoescruz'});
+
+    // ══════════════════════════════════════════════════════
+    // PÁG 2 — ÍNDICE / MAPA DA JORNADA
+    // ══════════════════════════════════════════════════════
+    doc.addPage(); fill(...BRANCO); box(0,0,W,H);
+    addHeader(`${primeiroNome} · Mapa da Jornada`);
+
+    let y=24;
+    font('helvetica','bold',18); txt(...PRETO);
+    doc.text('Sua Jornada Completa',ML,y); y+=5;
+    stroke(...OURO_MED); doc.setLineWidth(1); doc.line(ML,y,ML+60,y); y+=8;
+    font('helvetica','normal',9); txt(...CINZA_MED);
+    doc.text(`${nome}  ·  ${dataHoje}`,ML,y); y+=10;
+
+    // Grid dos 12 dias — 2 colunas
+    for(let d=1;d<=12;d++){
+      const col  = (d-1)%2;
+      const row  = Math.floor((d-1)/2);
+      const dx   = ML + col*(TW/2+2);
+      const dy   = y + row*22;
+      const dInfo= DIAS[d];
+      const cor  = faseCor[dInfo.fase]||OURO_MED;
+      const bg   = faseBg[dInfo.fase]||OURO_BG;
+      const ref  = reflexoes.find(r=>r.dia===d);
+      const feito= ref?.texto?.trim();
+      const semD = indezItens.filter(x=>x.dia===d).length;
+
+      fill(...bg); box(dx,dy,TW/2-2,18,2);
+      fill(...cor); box(dx,dy,4,18,1);
+      font('helvetica','bold',7.5); txt(...cor);
+      doc.text(`Dia ${d}`,dx+7,dy+7);
+      font('helvetica','normal',7); txt(...PRETO);
+      const tLines=doc.splitTextToSize(dInfo.titulo,TW/2-20);
+      doc.text(tLines[0],dx+7,dy+12);
+      // Indicador de conclusão
+      if(feito){ fill(...VERDE); box(dx+TW/2-10,dy+4,8,10,2); font('helvetica','bold',6); txt(255,255,255); doc.text('✓',dx+TW/2-6.5,dy+10); }
+      else      { fill(...CINZA_CLR); box(dx+TW/2-10,dy+4,8,10,2); font('helvetica','normal',6); txt(...CINZA_MED); doc.text('—',dx+TW/2-6.5,dy+10); }
+      if(semD){ font('helvetica','normal',6); txt(...VERDE); doc.text(`${semD}🌱`,dx+TW/2-10,dy+17); }
+    }
+    y+=6*22+6;
+
+    // Linha resumo do método
+    fill(...CINZA_BG); box(ML,y,TW,42,3);
+    font('helvetica','bold',8); txt(...PRETO);
+    doc.text('O Método INDOZE em 3 pilares',ML+8,y+9);
+    const pilares=[
+      {t:'1 · A Mente',d:'The Work de Byron Katie. Quando paramos de brigar com a realidade, o sofrimento dissolve.',c:LARANJA},
+      {t:'2 · O Sistema',d:'Bert Hellinger & Olinda Guedes. Nossa história familiar nos forma — e pode nos libertar.',c:VERDE},
+      {t:'3 · A Ação',d:'O Efeito Indez. Uma ação mínima em 24h tem mais poder que mil intenções.',c:OURO_MED}
+    ];
+    pilares.forEach((p,i)=>{
+      font('helvetica','bold',7.5); txt(...p.c);
+      doc.text(p.t,ML+8,y+17+i*9);
+      font('helvetica','normal',7); txt(...CINZA_MED);
+      doc.text(p.d,ML+8+28,y+17+i*9);
+    });
+
+    addRodape(2);
+
+    // ══════════════════════════════════════════════════════
+    // PÁG 3–14 — UM DIA POR PÁGINA
+    // ══════════════════════════════════════════════════════
+    for(let dia=1;dia<=12;dia++){
+      doc.addPage(); fill(...BRANCO); box(0,0,W,H);
+
+      const dInfo  = DIAS[dia];
+      const cor    = faseCor[dInfo.fase]||OURO_MED;
+      const bgFase = faseBg[dInfo.fase]||OURO_BG;
+      const reflex = reflexoes.find(r=>r.dia===dia);
+      const indezD = indezItens.filter(x=>x.dia===dia);
+      const escrD  = escrivaoHist.filter(x=>x.dia_contexto===dia);
+      const feito  = reflex?.texto?.trim();
+
+      // Cabeçalho colorido da fase
+      fill(...bgFase); box(0,0,W,18);
+      stroke(...cor); doc.setLineWidth(0.3); doc.line(0,18,W,18);
+      font('helvetica','bold',7); txt(...cor);
+      doc.text(dInfo.fase.toUpperCase(),ML,10);
+      font('helvetica','normal',7); txt(...CINZA_MED);
+      doc.text(`${primeiroNome}  ·  E-Feito INDOZE`,W-ML,10,{align:'right'});
+
+      let cy=26;
+
+      // Número e título do dia
+      fill(...cor); box(ML,cy-4,10,10,1);
+      font('helvetica','bold',8); txt(255,255,255);
+      doc.text(String(dia),ML+5,cy+3,{align:'center'});
+
+      font('helvetica','bold',18); txt(...PRETO);
+      doc.text(dInfo.titulo,ML+14,cy+3);
+      cy+=12;
+
+      stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(ML,cy,W-ML,cy); cy+=7;
+
+      // Descrição do dia
+      font('helvetica','italic',8.5); txt(...CINZA_MED);
+      cy=wrapTxt(dInfo.desc,ML,cy,TW,5)+4;
+
+      // Indez sugerido — card destacado
+      fill(...bgFase); box(ML,cy,TW,18,2);
+      fill(...cor); box(ML,cy,3,18,1);
+      font('helvetica','bold',7); txt(...cor);
+      doc.text('INDEZ SUGERIDO',ML+7,cy+7);
+      font('helvetica','italic',8); txt(...PRETO);
+      const iSugL=doc.splitTextToSize(dInfo.indez,TW-12);
+      doc.text(iSugL.slice(0,2),ML+7,cy+13);
+      cy+=22;
+
+      // ── Reflexão escrita
+      font('helvetica','bold',9); txt(...PRETO);
+      doc.text('✍  Sua reflexão',ML,cy); cy+=6;
+
+      if(feito){
+        const rfLines=doc.splitTextToSize(feito,TW-8);
+        const rfH=Math.min(rfLines.length*4.8+10,55);
+        fill(...CINZA_BG); box(ML,cy,TW,rfH,2);
+        stroke(...CINZA_CLR); doc.setLineWidth(0.2);
+        doc.roundedRect(ML,cy,TW,rfH,2,2,'S');
+        font('helvetica','normal',8); txt(...PRETO);
+        const vis=rfLines.slice(0,Math.floor((rfH-10)/4.8));
+        doc.text(vis,ML+5,cy+7);
+        cy+=rfH+6;
+      } else {
+        fill(...CINZA_BG); box(ML,cy,TW,12,2);
+        font('helvetica','italic',8); txt(...CINZA_MED);
+        doc.text('Reflexão não registrada neste dia.',ML+5,cy+8);
+        cy+=16;
+      }
+
+      // ── Sementes plantadas
+      if(indezD.length){
+        font('helvetica','bold',9); txt(...VERDE);
+        doc.text('🌱  Sementes plantadas',ML,cy); cy+=6;
+        indezD.forEach((iv,ii)=>{
+          if(cy>H-36){ /* overflow tratado abaixo */ return; }
+          fill(...VERDE_BG); box(ML,cy,TW,13,2);
+          fill(...VERDE); box(ML,cy,3,13,1);
+          font('helvetica','bold',7); txt(...VERDE);
+          doc.text(`Semente ${iv.numero_semente||ii+1}`,ML+7,cy+6);
+          font('helvetica','normal',7.5); txt(...PRETO);
+          const sL=doc.splitTextToSize(iv.texto,TW-16);
+          doc.text(sL[0]||'',ML+7,cy+11);
+          cy+=16;
+        });
+        cy+=2;
+      }
+
+      // ── Espelho da Mente
+      if(escrD.length && cy < H-55){
+        font('helvetica','bold',9); txt(...AZUL);
+        doc.text('🪞  Espelho da Mente',ML,cy); cy+=6;
+        escrD.slice(0,1).forEach(e=>{
+          if(cy>H-40) return;
+          // Pergunta (balão esquerdo)
+          fill(...AZUL_BG); box(ML,cy,TW*0.85,12,2);
+          stroke(...AZUL); doc.setLineWidth(0.2);
+          doc.roundedRect(ML,cy,TW*0.85,12,2,2,'S');
+          font('helvetica','italic',7); txt(...AZUL);
+          const qL=doc.splitTextToSize('→ '+e.pergunta,TW*0.82-4);
+          doc.text(qL[0],ML+4,cy+8);
+          cy+=15;
+          if(cy>H-35) return;
+          // Resposta (balão direito)
+          fill(...CINZA_BG); box(ML+TW*0.08,cy,TW*0.92,14,2);
+          font('helvetica','normal',7); txt(...CINZA_ESC);
+          const rL=doc.splitTextToSize(e.resposta.replace(/\n/g,' ').substring(0,200),TW*0.87-4);
+          doc.text(rL.slice(0,2),ML+TW*0.08+4,cy+6);
+          cy+=17;
+        });
+      }
+
+      // Badge de status no canto superior direito
+      if(feito){
+        fill(...VERDE); box(W-ML-18,26,18,7,2);
+        font('helvetica','bold',6.5); txt(255,255,255);
+        doc.text('FEITO ✓',W-ML-9,31,{align:'center'});
+      } else {
+        fill(...CINZA_CLR); box(W-ML-18,26,18,7,2);
+        font('helvetica','normal',6.5); txt(...CINZA_MED);
+        doc.text('Pendente',W-ML-9,31,{align:'center'});
+      }
+
+      addRodape(dia+2);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // ÚLTIMA PÁG — CELEBRAÇÃO PERSONALIZADA
+    // ══════════════════════════════════════════════════════
+    doc.addPage(); fill(...BRANCO); box(0,0,W,H);
+
+    // Faixa superior dourada
+    fill(...OURO); box(0,0,W,60);
+    // Decoração geométrica
+    stroke(255,255,255); doc.setLineWidth(0.5);
+    for(let i=0;i<5;i++){ doc.circle(W-30+i*8,30,10+i*4,'S'); }
+
+    font('helvetica','bold',26); txt(255,255,255);
+    doc.text('Parabéns,',ML,28);
+    doc.text(`${primeiroNome}!`,ML,42);
+    font('helvetica','normal',10); txt(255,240,200);
+    doc.text('Você completou os 12 dias por dentro.',ML,52);
+
+    let ly=76;
+
+    // Frase central
+    fill(...OURO_BG); box(ML,ly,TW,32,3);
+    fill(...OURO_MED); box(ML,ly,3,32,1);
+    font('helvetica','italic',11); txt(...CINZA_ESC);
+    doc.text('"Ideias e intenções não mudam',ML+8,ly+10);
+    doc.text('a realidade — atitudes SIM!"',ML+8,ly+18);
+    font('helvetica','normal',8); txt(...OURO);
+    doc.text('— Eliane Simões Cruz · Better Together Systemic',ML+8,ly+27);
+    ly+=40;
+
+    // Cards de conquista
+    font('helvetica','bold',9); txt(...PRETO);
+    doc.text('Suas conquistas nesta jornada',ML,ly); ly+=8;
+
+    const conquistas=[
+      {ico:'📖',n:String(totalRef),l:'Dias\nrefletidos',c:AZUL,bg:AZUL_BG},
+      {ico:'🌱',n:String(totalSem),l:'Sementes\nplantadas',c:VERDE,bg:VERDE_BG},
+      {ico:'🪞',n:String(totalInt),l:'Conversas\ncom o Espelho',c:OURO_MED,bg:OURO_BG},
+      {ico:'✦',n:`${pct}%`,l:'Jornada\nconcluída',c:LARANJA,bg:LAR_BG}
+    ];
+    conquistas.forEach((c,i)=>{
+      const cx=ML+i*43;
+      fill(...c.bg); box(cx,ly,39,36,3);
+      stroke(...c.c); doc.setLineWidth(0.4);
+      doc.roundedRect(cx,ly,39,36,3,3,'S');
+      font('helvetica','normal',14); txt(...c.c);
+      doc.text(c.ico,cx+19.5,ly+13,{align:'center'});
+      font('helvetica','bold',16); txt(...c.c);
+      doc.text(c.n,cx+19.5,ly+24,{align:'center'});
+      font('helvetica','normal',6.5); txt(...CINZA_MED);
+      const ll=c.l.split('\n');
+      doc.text(ll[0],cx+19.5,ly+30,{align:'center'});
+      doc.text(ll[1]||'',cx+19.5,ly+34,{align:'center'});
+    });
+    ly+=44;
+
+    // Mensagem personalizada por conquista
+    fill(...CINZA_BG); box(ML,ly,TW,36,3);
+    font('helvetica','bold',9); txt(...PRETO);
+    doc.text(`${primeiroNome}, aqui está o que você construiu:`,ML+8,ly+9);
+    font('helvetica','normal',8.5); txt(...CINZA_MED);
+    const msgs=[
+      `· Você plantou ${totalSem} sementes — ${totalSem} inícios reais que o universo já leu.`,
+      `· Você trocou ${totalInt} reflexões com o Espelho da Mente.`,
+      `· Você completou ${totalRef} dos 12 dias. Isso é autoria.`
+    ];
+    msgs.forEach((m,i)=>{ doc.text(m,ML+8,ly+17+i*7); });
+    ly+=44;
+
+    // Convite para próxima série
+    fill(...VERDE_BG); box(ML,ly,TW,28,3);
+    fill(...VERDE); box(ML,ly,3,28,1);
+    font('helvetica','bold',9); txt(...VERDE);
+    doc.text('Continue plantando!',ML+8,ly+9);
+    font('helvetica','normal',8); txt(...CINZA_MED);
+    doc.text('Compartilhe sua história, marque @elianesimoescruz e',ML+8,ly+17);
+    doc.text('convide mais pessoas para a próxima série.',ML+8,ly+23);
+    ly+=36;
+
+    // Assinatura final
+    stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(ML,ly,W-ML,ly); ly+=8;
+    font('helvetica','bold',10); txt(...PRETO);
+    doc.text('Better Together Systemic',ML,ly);
+    font('helvetica','normal',8); txt(...CINZA_MED);
+    doc.text('Eliane Simões Cruz · Psicopedagoga e Terapeuta',ML,ly+7);
+    txt(...INSTA);
+    doc.textWithLink('@elianesimoescruz',ML,ly+14,{url:'https://instagram.com/elianesimoescruz'});
+
+    // QR-like visual (círculos decorativos representando o link)
+    fill(...OURO_BG); box(W-ML-30,ly-4,30,30,3);
+    fill(...OURO_MED); doc.circle(W-ML-15,ly+10,10,'S');
+    font('helvetica','bold',5.5); txt(...OURO);
+    doc.text('Instagram',W-ML-15,ly+10,{align:'center'});
+    doc.text('@elianesimoescruz',W-ML-15,ly+15,{align:'center'});
+
+    // Rodapé da última página
+    stroke(...CINZA_CLR); doc.setLineWidth(0.2); doc.line(0,H-14,W,H-14);
+    fill(...CINZA_BG); box(0,H-14,W,14);
+    font('helvetica','normal',6.5); txt(...CINZA_MED);
+    doc.text('Better Together Systemic  ·  Eliane Simões Cruz',ML,H-8);
+    txt(...INSTA);
+    doc.textWithLink('@elianesimoescruz',W/2,H-8,{align:'center',url:'https://instagram.com/elianesimoescruz'});
+    txt(...CINZA_MED);
+    doc.text(`Pág. 15`,W-ML,H-8,{align:'right'});
+
+    // ── Salva com nome personalizado
+    doc.save(nomeArquivo);
+
+  } catch(err){
+    console.error('Erro PDF:', err);
+    alert('Não foi possível gerar o PDF. Erro: '+err.message);
+  } finally {
+    const btn = document.getElementById('btn-baixar-pdf');
+    if(btn){ btn.disabled=false; btn.textContent='⬇ Baixar E-Feito PDF'; }
+  }
+}
+document.getElementById('cad-tel').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'');});
+document.getElementById('cad-insta').addEventListener('blur',function(){if(this.value&&!this.value.startsWith('@'))this.value='@'+this.value;});
+
+iniciar();
+</script>
+</body>
+</html>
