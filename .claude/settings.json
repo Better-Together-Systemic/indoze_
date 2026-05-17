@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(git -C /Users/brunodev/GitHub/indoze status --short)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze log --oneline -8)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze ls-files --others --exclude-standard)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze rm -r --cached dist/)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze diff --name-only HEAD)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze status --short --untracked-files=all)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze show HEAD:src/context/AppContext.jsx)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze diff HEAD src/context/AppContext.jsx src/components/sections/SecaoDias.jsx src/components/sections/SecaoEscrivao.jsx src/components/sections/SecaoIndez.jsx src/index.css)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze add .gitignore vercel.json)",
+      "Bash(git -C /Users/brunodev/GitHub/indoze commit -m ' *)"
+    ]
+  }
+}
