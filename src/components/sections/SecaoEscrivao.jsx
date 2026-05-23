@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, ChevronUp, ChevronDown, Search, Check, Sprout } from 'lucide-react'
+import { X, ChevronUp, ChevronDown, Search, Check, Sprout, Leaf } from 'lucide-react'
 import { useApp } from '../../context/AppContext.jsx'
 import { sb } from '../../lib/supabase.js'
 import { DIAS, MODELO } from '../../lib/dias.js'
@@ -60,6 +60,40 @@ const INSTRUCAO_DIA = {
   12: 'FASE 4 — A MANIFESTAÇÃO (Celebração). Celebre o fim da jornada. Peça que ela expresse o seu Efeito Indez: o que mudou em 12 dias? Que sementes foram plantadas? Encerre com gratidão, assentimento e abertura para o que vem. O Algoritmo do Universo está em movimento.'
 }
 
+const SYS_INDEZ_SISTEMICO = `Você é uma Assistente Sistêmica especializada na metodologia de Byron Katie, Olinda Guedes e O Menino do Dedo Verde (Maurice Druon), fundamentada nos livros: "O que traz quem levamos para a escola" (Olinda Guedes), "Ame sua realidade" (Byron Katie), "O Menino do Dedo Verde" (Maurice Druon) e "O Outro da Paz".
+
+Sua função é identificar, dentro de cada situação trazida, qual pode ser o "Indez Sistêmico" da pessoa.
+
+O "Indez" é uma metáfora inspirada na roça: um ovo simbólico colocado no ninho para estimular um novo movimento de vida. No contexto sistêmico, o indez é um símbolo concreto, um gesto, um objeto, uma prática, uma experiência sensorial ou uma ação simples e amorosa que fortalece no corpo e na matéria o movimento de cura e o Universo do Sim.
+
+O indez NÃO é conselho, obrigação, prescrição terapêutica, superstição ou solução mágica.
+O indez É um marcador simbólico de pertencimento, honra, inclusão, reconexão e novo legado.
+
+INSTRUÇÕES:
+1. Leia cuidadosamente a situação trazida pela pessoa.
+2. Identifique: o tema principal, quem apareceu, qual memória ancestral surgiu, qual dor ou ferida emocional está presente, qual movimento aponta para o Universo do Sim, quais símbolos podem fortalecer a pessoa, o que pode trazer sensação de amor, pertencimento, leveza ou verdade.
+3. Crie sugestões de indez profundamente conectadas ao Campo apresentado.
+4. O indez deve ser simples, concreto, sensorial, simbólico e possível de realizar na vida cotidiana.
+5. O indez pode envolver: roupas, alimentos, receitas, objetos antigos, flores, plantas, ervas, orações, salmos, mantras, cartas, músicas, fotografias, sementes, árvores, tecidos, terços, caminhadas, artesanato, culinária, velas, pequenos rituais cotidianos, movimentos de honra aos ancestrais.
+6. Explique por que este indez faz sentido para o momento do Universo do Sim, o que ele fortalece no sistema e qual movimento ele ajuda a ancorar.
+7. Tom: profundo, amoroso, adulto, visceral, acolhedor, linguagem clara, objetiva, educada e transparente.
+8. NUNCA faça diagnóstico. NUNCA imponha. NUNCA infantilize. NUNCA use linguagem mística exagerada. NUNCA invente fatos não apresentados — é um indez de sugestão.
+9. Considere sempre: memórias transgeracionais, pertencimento, vínculo, exclusão, honra aos ancestrais, epigenética, Campo, Novo Legado.
+
+ESTRUTURA OBRIGATÓRIA DA RESPOSTA:
+
+MOVIMENTO QUE APARECEU:
+(o que surgiu no Campo a partir da escrita da pessoa)
+
+QUAL PODE SER O INDEZ:
+(lista de sugestões concretas e sensoriais)
+
+O QUE ESTE INDEZ FORTALECE:
+(explicação sistêmica breve)
+
+FRASE DE ENCERRAMENTO:
+(curta, profunda e amorosa)`
+
 function extrairOpcoes(texto) {
   const padroes = [
     /\[\s*1\s*\](.*?)(?=\[\s*2\s*\]|$)/s,
@@ -95,6 +129,10 @@ export default function SecaoEscrivao() {
   const [confirmacao, setConfirmacao] = useState(null)
   const [historico, setHistorico] = useState([])
   const [histAbertos, setHistAbertos] = useState({})
+  const [ultimaReflexao, setUltimaReflexao] = useState('')
+  const [indezSistemico, setIndezSistemico] = useState('')
+  const [carregandoIndez, setCarregandoIndez] = useState(false)
+  const [erroIndez, setErroIndez] = useState('')
 
   useEffect(() => {
     if (serieAtiva) carregarHistorico()
@@ -110,6 +148,7 @@ export default function SecaoEscrivao() {
     const p = input.trim()
     if (!p) return
     setCarregando(true); setResposta(''); setErro(''); setOpcoes([]); setOpcaoSelecionada(null); setConfirmacao(null)
+    setUltimaReflexao(p); setIndezSistemico(''); setErroIndez('')
 
     const dCtx = escrivaoContextoDia
     let ctxDiaStr = ''
@@ -169,6 +208,23 @@ export default function SecaoEscrivao() {
 
   function toggleHist(id) {
     setHistAbertos(prev => ({ ...prev, [id]: !prev[id] }))
+  }
+
+  async function gerarIndezSistemico() {
+    if (!ultimaReflexao) return
+    setCarregandoIndez(true); setIndezSistemico(''); setErroIndez('')
+    try {
+      const data = await apiCall({
+        model: MODELO, max_tokens: 900,
+        system: SYS_INDEZ_SISTEMICO,
+        messages: [{ role: 'user', content: 'Situação trazida: "' + ultimaReflexao + '"' }]
+      })
+      setIndezSistemico(data.content.map(i => i.text || '').join(''))
+    } catch (e) {
+      setErroIndez('Não foi possível gerar o Indez Sistêmico. Tente novamente.')
+    } finally {
+      setCarregandoIndez(false)
+    }
   }
 
   const grupos = {}
@@ -232,6 +288,35 @@ export default function SecaoEscrivao() {
             })}
           </div>
           <div className="escriv-opcoes-nota">Clique na opção que traz mais leveza. O texto vai para o seu Indez — você pode editá-lo antes de plantar.</div>
+        </div>
+      )}
+
+      {resposta && !carregando && (
+        <div className="indez-sist-wrap">
+          {!indezSistemico && !carregandoIndez && (
+            <button className="btn-indez-sist" onClick={gerarIndezSistemico}>
+              <Leaf size={15} style={{ marginRight: 7, verticalAlign: 'middle' }} />
+              Qual é o meu Indez Sistêmico?
+            </button>
+          )}
+          {carregandoIndez && (
+            <div className="indez-sist-loading">
+              <LoadingDots /><span style={{ marginLeft: 8 }}>Lendo o Campo...</span>
+            </div>
+          )}
+          {indezSistemico && (
+            <div className="indez-sist-resp visivel">
+              <div className="indez-sist-titulo"><Leaf size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />Seu Indez Sistêmico</div>
+              {indezSistemico.split('\n\n').map((bloco, i) => (
+                <p key={i} dangerouslySetInnerHTML={{ __html: bloco.replace(/\n/g, '<br>') }} />
+              ))}
+            </div>
+          )}
+          {erroIndez && (
+            <div className="indez-sist-erro">
+              {erroIndez} <button className="btn-retry" onClick={gerarIndezSistemico}>Tentar novamente</button>
+            </div>
+          )}
         </div>
       )}
 

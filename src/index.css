@@ -488,6 +488,47 @@ body{
   font-size:15px;color:rgba(250,250,248,.85);
 }
 .escriv-erro.visivel{display:block;}
+
+/* ─── INDEZ SISTÊMICO ─── */
+.indez-sist-wrap{margin-top:1.5rem;}
+.btn-indez-sist{
+  width:100%;padding:.9rem 1.2rem;
+  background:rgba(46,92,14,.12);
+  border:1px solid rgba(46,92,14,.4);
+  color:rgba(250,250,248,.85);
+  font-size:15px;font-family:inherit;
+  cursor:pointer;text-align:left;
+  transition:background .2s,border-color .2s;
+  letter-spacing:.01em;
+}
+.btn-indez-sist:hover{background:rgba(46,92,14,.22);border-color:rgba(46,92,14,.7);}
+.indez-sist-loading{
+  display:flex;align-items:center;
+  padding:.9rem 0;font-size:15px;
+  color:var(--muted);
+}
+.indez-sist-resp{
+  display:none;
+  background:rgba(46,92,14,.08);
+  border-left:2px solid rgba(46,92,14,.6);
+  padding:1.25rem 1.5rem;
+  margin-top:.5rem;
+}
+.indez-sist-resp.visivel{display:block;}
+.indez-sist-resp p{
+  font-size:15px;color:rgba(250,250,248,.88);
+  line-height:1.75;margin-bottom:.85rem;
+}
+.indez-sist-resp p:last-child{margin-bottom:0;}
+.indez-sist-titulo{
+  font-size:12px;letter-spacing:.15em;
+  text-transform:uppercase;color:rgba(46,92,14,.9);
+  font-weight:500;margin-bottom:1rem;
+}
+.indez-sist-erro{
+  font-size:14px;color:rgba(192,57,43,.9);
+  margin-top:.75rem;
+}
 .escriv-dia-ctx{
   display:none;
   background:var(--cinza2);
