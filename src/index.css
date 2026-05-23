@@ -1,14 +1,14 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --preto:#0D0D0B;
-  --quase-preto:#141412;
+  --preto:#0D1F0A;
+  --quase-preto:#12250E;
   --ouro:#C8952A;
   --ouro-claro:#F0D488;
   --ouro-escuro:#7A5610;
   --areia:#F5EDD8;
   --areia2:#EDE0C4;
-  --cinza:#2A2A28;
-  --cinza2:#3D3D3A;
+  --cinza:#1E3515;
+  --cinza2:#2A4720;
   --muted:#888880;
   --verde:#2E5C0E;
   --branco:#FAFAF8;
@@ -803,7 +803,7 @@ body{
 /* ─── MODAL LIVRO ─── */
 .livro-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9999;overflow-y:auto;padding:2rem 1rem;}
 .livro-modal{max-width:680px;margin:auto;background:#fff;color:#1a1a18;}
-.livro-capa{background:#0D0D0B;padding:2.5rem 2rem;text-align:center;}
+.livro-capa{background:#0D1F0A;padding:2.5rem 2rem;text-align:center;}
 .livro-capa-titulo{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:#C8952A;margin-bottom:.35rem;line-height:1.3;}
 .livro-capa-sub{font-size:14px;color:#888;letter-spacing:.1em;}
 .livro-inner{padding:2rem;}
@@ -817,12 +817,12 @@ body{
 .livro-dia-insight{background:#F5EDD8;border-left:2px solid #C8952A;padding:8px 12px;margin-bottom:.75rem;font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:#7A5610;}
 .livro-dia-escrita{font-size:13px;color:#555;line-height:1.6;}
 .livro-dia-transf{font-size:11px;color:#3B6D11;margin-top:.5rem;font-weight:500;}
-.livro-final{background:#0D0D0B;color:#D4C4A8;padding:1.75rem;text-align:center;margin-top:1.5rem;}
+.livro-final{background:#0D1F0A;color:#D4C4A8;padding:1.75rem;text-align:center;margin-top:1.5rem;}
 .livro-final-pergunta{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;font-weight:300;color:#C8952A;margin-bottom:.75rem;}
 .livro-final-txt{font-size:13px;line-height:1.7;margin-bottom:.75rem;}
 .livro-final-assinatura{font-size:11px;color:#555;letter-spacing:.1em;margin-top:1rem;}
 .livro-btns{display:flex;gap:10px;justify-content:center;margin-top:1.5rem;padding:0 0 1rem;}
-.btn-print{background:#C8952A;color:#0D0D0B;border:none;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:16px;letter-spacing:.08em;cursor:pointer;}
+.btn-print{background:#C8952A;color:#0D1F0A;border:none;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:16px;letter-spacing:.08em;cursor:pointer;}
 .btn-print:disabled{opacity:.6;cursor:not-allowed;}
 .btn-fechar-livro{background:none;border:1px solid #ccc;color:#555;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
 
