@@ -12,7 +12,10 @@
       "Bash(git -C /Users/brunodev/GitHub/indoze show HEAD:src/context/AppContext.jsx)",
       "Bash(git -C /Users/brunodev/GitHub/indoze diff HEAD src/context/AppContext.jsx src/components/sections/SecaoDias.jsx src/components/sections/SecaoEscrivao.jsx src/components/sections/SecaoIndez.jsx src/index.css)",
       "Bash(git -C /Users/brunodev/GitHub/indoze add .gitignore vercel.json)",
-      "Bash(git -C /Users/brunodev/GitHub/indoze commit -m ' *)"
+      "Bash(git -C /Users/brunodev/GitHub/indoze commit -m ' *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
