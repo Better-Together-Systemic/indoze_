@@ -350,7 +350,7 @@ export default function SecaoEscrivao() {
 
       {opcoes.some(o => o && o.length > 5) && (
         <div className="escriv-opcoes visivel">
-          <div className="escriv-opcoes-titulo"><Sprout size={15} style={{ marginRight: 6, verticalAlign: 'middle' }} />Qual é a sua semente para hoje?</div>
+          <div className="escriv-opcoes-titulo"><Sprout size={15} style={{ marginRight: 6, verticalAlign: 'middle' }} />Qual é a sua mínima ação para hoje?</div>
           <div className="escriv-opcoes-grid">
             {opcoes.map((txt, i) => {
               if (!txt || txt.length < 5) return null
@@ -377,7 +377,7 @@ export default function SecaoEscrivao() {
                 onKeyDown={e => { if (e.key === 'Enter') escolherCustom() }}
                 placeholder="Escreva aqui a sua própria semente..."
               />
-              <button className="btn-custom-plantar" onClick={escolherCustom}>Plantar</button>
+              <button className="btn-custom-plantar" onClick={escolherCustom}>Mínima ação</button>
             </div>
           </div>
         </div>
