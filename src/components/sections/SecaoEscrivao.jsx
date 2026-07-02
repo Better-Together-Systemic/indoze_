@@ -151,7 +151,7 @@ function extrairOpcoes(texto) {
 
 export default function SecaoEscrivao() {
   const { serieAtiva, usuarioSessao, escrivaoContextoDia, setEscrivaoContextoDia, escrivaoTextoInicial, setEscrivaoTextoInicial, irParaIndezComTexto, setSecaoAtiva, numeroSerie } = useApp()
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState(() => escrivaoTextoInicial || '')
   const [customIndez, setCustomIndez] = useState('')
   const [resposta, setResposta] = useState('')
   const [carregando, setCarregando] = useState(false)
@@ -171,11 +171,8 @@ export default function SecaoEscrivao() {
   }, [serieAtiva])
 
   useEffect(() => {
-    if (escrivaoTextoInicial) {
-      setInput(escrivaoTextoInicial)
-      setEscrivaoTextoInicial('')
-    }
-  }, [escrivaoTextoInicial])
+    if (escrivaoTextoInicial) setEscrivaoTextoInicial('')
+  }, [])
 
   async function carregarHistorico() {
     const { data } = await sb.from('escrivao_historico').select('*')
