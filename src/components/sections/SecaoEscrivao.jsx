@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, ChevronUp, ChevronDown, Search, Check, Sprout, Leaf } from 'lucide-react'
+import { X, ChevronUp, ChevronDown, Search, Check, Sprout, Leaf, ArrowRight } from 'lucide-react'
 import { useApp } from '../../context/AppContext.jsx'
 import { sb } from '../../lib/supabase.js'
 import { DIAS, MODELO } from '../../lib/dias.js'
@@ -150,8 +150,9 @@ function extrairOpcoes(texto) {
 }
 
 export default function SecaoEscrivao() {
-  const { serieAtiva, usuarioSessao, escrivaoContextoDia, setEscrivaoContextoDia, irParaIndezComTexto, numeroSerie } = useApp()
+  const { serieAtiva, usuarioSessao, escrivaoContextoDia, setEscrivaoContextoDia, escrivaoTextoInicial, setEscrivaoTextoInicial, irParaIndezComTexto, setSecaoAtiva, numeroSerie } = useApp()
   const [input, setInput] = useState('')
+  const [customIndez, setCustomIndez] = useState('')
   const [resposta, setResposta] = useState('')
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState('')
@@ -169,16 +170,31 @@ export default function SecaoEscrivao() {
     if (serieAtiva) carregarHistorico()
   }, [serieAtiva])
 
+  useEffect(() => {
+    if (escrivaoTextoInicial) {
+      setInput(escrivaoTextoInicial)
+      setEscrivaoTextoInicial('')
+    }
+  }, [escrivaoTextoInicial])
+
   async function carregarHistorico() {
     const { data } = await sb.from('escrivao_historico').select('*')
       .eq('serie_id', serieAtiva.id).order('criado_em', { ascending: true })
     setHistorico(data || [])
   }
 
+  function escolherCustom() {
+    const txt = customIndez.trim()
+    if (!txt) return
+    setOpcaoSelecionada('custom')
+    setConfirmacao({ txt, idx: -1 })
+    irParaIndezComTexto(txt, escrivaoContextoDia)
+  }
+
   async function investigar() {
     const p = input.trim()
     if (!p) return
-    setCarregando(true); setResposta(''); setErro(''); setOpcoes([]); setOpcaoSelecionada(null); setConfirmacao(null)
+    setCarregando(true); setResposta(''); setErro(''); setOpcoes([]); setOpcaoSelecionada(null); setConfirmacao(null); setCustomIndez('')
     setUltimaReflexao(p); setIndezSistemico(''); setErroIndez('')
 
     const dCtx = escrivaoContextoDia
@@ -319,6 +335,19 @@ export default function SecaoEscrivao() {
             })}
           </div>
           <div className="escriv-opcoes-nota">Clique na opção que traz mais leveza. O texto vai para o seu Indez — você pode editá-lo antes de plantar.</div>
+          <div className="escriv-custom-wrap">
+            <div className="escriv-custom-label">Ou escreva o seu próprio Indez:</div>
+            <div className="escriv-custom-row">
+              <input
+                className="escriv-custom-input"
+                value={customIndez}
+                onChange={e => setCustomIndez(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') escolherCustom() }}
+                placeholder="Escreva aqui a sua própria semente..."
+              />
+              <button className="btn-custom-plantar" onClick={escolherCustom}>Plantar</button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -360,8 +389,26 @@ export default function SecaoEscrivao() {
       {confirmacao && (
         <div style={{ marginTop: '1rem' }}>
           <div style={{ background: 'rgba(200,149,42,.08)', borderLeft: '2px solid var(--ouro)', padding: '.85rem 1.1rem', marginBottom: '.75rem', fontSize: '15px', color: 'rgba(250,250,248,.88)', lineHeight: 1.6 }}>
-            <Check size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 5 }} />Opção {confirmacao.idx + 1} escolhida. Vá ao Indez, edite se quiser e plante sua semente.
+            <Check size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 5 }} />
+            {confirmacao.idx === -1 ? 'Indez próprio escolhido.' : `Opção ${confirmacao.idx + 1} escolhida.`} Vá ao Indez, edite se quiser e plante sua semente.
           </div>
+          {dCtx && dCtx < 12 && (
+            <div className="escriv-proximo-dia">
+              <div className="escriv-proximo-label">Próximo passo</div>
+              <div className="escriv-proximo-info">Dia {dCtx + 1} — {DIAS[dCtx + 1]?.titulo}</div>
+              <button className="btn-proximo-dia" onClick={() => setSecaoAtiva('dias')}>
+                Continuar para os 12 Dias <ArrowRight size={13} style={{ marginLeft: 5, verticalAlign: 'middle' }} />
+              </button>
+            </div>
+          )}
+          {dCtx === 12 && (
+            <div className="escriv-proximo-dia">
+              <div className="escriv-proximo-info">✦ Você chegou ao Dia 12! Gere seu E-Feito INDOZE.</div>
+              <button className="btn-proximo-dia" onClick={() => setSecaoAtiva('dias')}>
+                Ver meu E-Feito <ArrowRight size={13} style={{ marginLeft: 5, verticalAlign: 'middle' }} />
+              </button>
+            </div>
+          )}
         </div>
       )}
 

@@ -11,6 +11,7 @@ export function AppProvider({ children }) {
   const [numeroSerie, setNumeroSerie] = useState(1)
   const [secaoAtiva, setSecaoAtiva] = useState('sala')
   const [escrivaoContextoDia, setEscrivaoContextoDia] = useState(null)
+  const [escrivaoTextoInicial, setEscrivaoTextoInicial] = useState('')
   const [indezTexto, setIndezTexto] = useState('')
   const [indezDia, setIndezDia] = useState(null)
 
@@ -98,6 +99,7 @@ export function AppProvider({ children }) {
 
   const irParaEscrivaoComDia = useCallback((n, texto) => {
     setEscrivaoContextoDia(n)
+    if (texto) setEscrivaoTextoInicial(texto)
     setSecaoAtiva('escrivao')
   }, [])
 
@@ -115,6 +117,7 @@ export function AppProvider({ children }) {
       carregarPerfil, deslogar, sair, iniciarNovaSerie,
       secaoAtiva, setSecaoAtiva,
       escrivaoContextoDia, setEscrivaoContextoDia,
+      escrivaoTextoInicial, setEscrivaoTextoInicial,
       indezTexto, setIndezTexto,
       indezDia, setIndezDia,
       irParaEscrivaoComDia, irParaIndezComTexto,

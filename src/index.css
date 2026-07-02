@@ -585,6 +585,19 @@ body{
 .escriv-opcao-tipo{font-size:11px;letter-spacing:.10em;text-transform:uppercase;color:var(--ouro);margin-bottom:4px;}
 .escriv-opcao-texto{font-size:15px;color:rgba(250,250,248,.88);line-height:1.6;}
 .escriv-opcoes-nota{font-size:13px;color:var(--muted);margin-top:1rem;font-style:italic;line-height:1.6;}
+.escriv-custom-wrap{margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(200,149,42,.12);}
+.escriv-custom-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.escriv-custom-row{display:flex;gap:8px;align-items:center;}
+.escriv-custom-input{flex:1;background:var(--fundo);border:1px solid rgba(200,149,42,.25);color:var(--branco);padding:.55rem .85rem;font-size:14px;border-radius:2px;}
+.escriv-custom-input:focus{outline:none;border-color:var(--ouro);}
+.escriv-custom-input::placeholder{color:var(--muted);}
+.btn-custom-plantar{background:transparent;border:1px solid rgba(200,149,42,.4);color:var(--ouro);padding:.55rem 1rem;font-size:13px;cursor:pointer;letter-spacing:.08em;white-space:nowrap;border-radius:2px;}
+.btn-custom-plantar:hover{background:rgba(200,149,42,.1);border-color:var(--ouro);}
+.escriv-proximo-dia{background:rgba(200,149,42,.06);border:1px solid rgba(200,149,42,.18);padding:1rem 1.25rem;margin-top:.5rem;}
+.escriv-proximo-label{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--ouro);margin-bottom:.35rem;}
+.escriv-proximo-info{font-size:15px;color:var(--branco);font-family:'Cormorant Garamond',serif;margin-bottom:.75rem;}
+.btn-proximo-dia{background:transparent;border:1px solid rgba(200,149,42,.4);color:var(--ouro);padding:.5rem 1rem;font-size:13px;cursor:pointer;letter-spacing:.06em;border-radius:2px;display:inline-flex;align-items:center;}
+.btn-proximo-dia:hover{background:rgba(200,149,42,.1);border-color:var(--ouro);}
 .escriv-hist{margin-top:3rem;border-top:1px solid rgba(200,149,42,.15);padding-top:2rem;}
 .escriv-hist-titulo{
   font-size:13px;letter-spacing:.2em;text-transform:uppercase;

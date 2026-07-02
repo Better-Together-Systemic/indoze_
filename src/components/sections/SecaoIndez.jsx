@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Sprout, Egg } from 'lucide-react'
+import { Sprout, Egg, ArrowRight } from 'lucide-react'
 import { useApp } from '../../context/AppContext.jsx'
 import { sb } from '../../lib/supabase.js'
 import { DIAS } from '../../lib/dias.js'
 
 export default function SecaoIndez() {
-  const { serieAtiva, usuarioSessao, indezTexto, setIndezTexto, indezDia, setIndezDia, escrivaoContextoDia, numeroSerie } = useApp()
+  const { serieAtiva, usuarioSessao, indezTexto, setIndezTexto, indezDia, setIndezDia, escrivaoContextoDia, setSecaoAtiva, numeroSerie } = useApp()
   const [inputTxt, setInputTxt] = useState('')
   const [inputDia, setInputDia] = useState('')
   const [erro, setErro] = useState('')
@@ -135,13 +135,21 @@ export default function SecaoIndez() {
               </div>
               {okMsg.proximoDia ? (
                 <div style={{ borderTop: '1px solid rgba(200,149,42,.15)', paddingTop: '.85rem', marginTop: '.5rem' }}>
-                  <div style={{ fontSize: '12px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--ouro)', marginBottom: '.4rem' }}>Amanhã — Dia {okMsg.proximoDia}</div>
+                  <div style={{ fontSize: '12px', letterSpacing: '.15em', textTransform: 'uppercase', color: 'var(--ouro)', marginBottom: '.4rem' }}>Próximo passo — Dia {okMsg.proximoDia}</div>
                   <div style={{ fontSize: '16px', color: 'var(--branco)', fontWeight: 400 }}>{okMsg.temaNome}</div>
-                  <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '.3rem' }}>Volte amanhã e continue a sua jornada. O universo já leu o seu início de hoje. ✦</div>
+                  <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '.3rem', marginBottom: '.75rem' }}>O universo já leu o seu início de hoje. Volte amanhã para continuar a jornada. ✦</div>
+                  <button className="btn-proximo-dia" onClick={() => setSecaoAtiva('dias')}>
+                    Ir para os 12 Dias <ArrowRight size={13} style={{ marginLeft: 5, verticalAlign: 'middle' }} />
+                  </button>
                 </div>
               ) : (
                 <div style={{ borderTop: '1px solid rgba(200,149,42,.15)', paddingTop: '.85rem', color: 'var(--ouro-claro)', fontSize: '15px' }}>
                   ✦ Você chegou ao Dia 12! Sua jornada INDOZE está completa. Celebre e gere seu E-Feito.
+                  <div style={{ marginTop: '.75rem' }}>
+                    <button className="btn-proximo-dia" onClick={() => setSecaoAtiva('dias')}>
+                      Ver meu E-Feito <ArrowRight size={13} style={{ marginLeft: 5, verticalAlign: 'middle' }} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
