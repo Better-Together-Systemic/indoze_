@@ -18,19 +18,46 @@ export function AppProvider({ children }) {
   const carregarPerfil = useCallback(async (authUser) => {
     setUsuarioSessao(authUser)
 
-    const { data: perfil } = await sb
+    let { data: perfil } = await sb
       .from('usuarios')
       .select('*')
       .eq('id', authUser.id)
-      .single()
+      .maybeSingle()
+
+    if (!perfil) {
+      const meta = authUser.user_metadata || {}
+      const { data: novoPerfil, error: erroPerfil } = await sb
+        .from('usuarios')
+        .insert({
+          id: authUser.id,
+          email: authUser.email,
+          nome: meta.nome || '',
+          telefone: meta.telefone || '',
+          instagram: meta.instagram || '',
+        })
+        .select()
+        .single()
+      if (erroPerfil) console.error('[perfil] falha ao criar usuario:', erroPerfil)
+      perfil = novoPerfil
+    }
     setPerfilUsuario(perfil)
 
-    const { data: serie } = await sb
+    let { data: serie } = await sb
       .from('series')
       .select('*')
       .eq('usuario_id', authUser.id)
       .eq('ativa', true)
-      .single()
+      .maybeSingle()
+
+    if (!serie) {
+      const { data: novaSerie, error: erroSerie } = await sb
+        .from('series')
+        .insert({ usuario_id: authUser.id, ativa: true })
+        .select()
+        .single()
+      if (erroSerie) console.error('[serie] falha ao criar serie ativa:', erroSerie)
+      serie = novaSerie
+    }
     setSerieAtiva(serie)
 
     const { count } = await sb
